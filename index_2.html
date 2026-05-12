@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>語順タイムアタック</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --green: #1D9E75;
+  --green-dark: #0F6E56;
+  --green-light: #E1F5EE;
+  --green-text: #085041;
+  --red: #E24B4A;
+  --red-light: #FCEBEB;
+  --red-text: #A32D2D;
+  --amber: #BA7517;
+  --amber-light: #FAEEDA;
+  --blue-light: #E6F1FB;
+  --blue-text: #0C447C;
+  --purple-light: #EEEDFE;
+  --purple-text: #3C3489;
+  --pink-light: #FBEAF0;
+  --pink-text: #72243E;
+  --bg: #F7F6F3;
+  --surface: #FFFFFF;
+  --surface2: #F0EEE9;
+  --border: rgba(0,0,0,0.1);
+  --border2: rgba(0,0,0,0.18);
+  --text: #1a1a1a;
+  --text2: #5a5a5a;
+  --text3: #9a9a9a;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Nunito', 'Noto Sans JP', sans-serif;
+  background: var(--bg); color: var(--text);
+  min-height: 100vh; display: flex; align-items: flex-start; justify-content: center; padding: 1rem;
+}
+.app { width: 100%; max-width: 560px; padding: 1rem 0 3rem; }
+.screen { display: none; }
+.screen.active { display: block; }
+.top-bar { display: flex; align-items: center; gap: 10px; margin-bottom: 1.5rem; }
+.back-link { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 5px 14px; font-size: 13px; font-weight: 600; color: var(--text2); cursor: pointer; display: flex; align-items: center; gap: 4px; transition: background 0.15s; }
+.back-link:hover { background: var(--surface2); }
+.bar-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.mode-hero { text-align: center; padding: 2.5rem 0 2rem; }
+.mode-hero h1 { font-size: 28px; font-weight: 900; color: var(--text); letter-spacing: -0.5px; margin-bottom: 4px; }
+.mode-hero .sub { font-size: 13px; color: var(--text3); font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; margin-bottom: 2rem; }
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.mode-card { background: var(--surface); border: 1.5px solid var(--border); border-radius: var(--radius); padding: 1.75rem 1rem 1.5rem; cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s; text-align: center; }
+.mode-card:hover { transform: translateY(-2px); border-color: var(--border2); box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.mode-card.student { border-color: rgba(29,158,117,0.3); }
+.mode-card.student:hover { border-color: var(--green); }
+.mode-icon { font-size: 32px; margin-bottom: 0.75rem; display: block; }
+.mode-label { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.mode-desc { font-size: 12px; color: var(--text3); font-weight: 600; }
+.center-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 1.5rem; max-width: 320px; margin: 3rem auto 0; text-align: center; }
+.center-card h2 { font-size: 17px; font-weight: 700; margin-bottom: 0.5rem; }
+.center-card p { font-size: 13px; color: var(--text2); margin-bottom: 1.25rem; }
+.center-card input[type=password] { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border2); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; color: var(--text); background: var(--bg); margin-bottom: 0.75rem; outline: none; transition: border-color 0.15s; }
+.center-card input:focus { border-color: var(--green); }
+.pw-err { font-size: 12px; color: var(--red); font-weight: 600; min-height: 18px; margin-bottom: 0.5rem; }
+.btn-row { display: flex; gap: 8px; justify-content: center; }
+.btn { padding: 9px 20px; border-radius: 20px; border: 1.5px solid var(--border2); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s, transform 0.1s; }
+.btn:hover { background: var(--surface2); }
+.btn:active { transform: scale(0.97); }
+.btn.primary { background: var(--green); color: #fff; border-color: var(--green); }
+.btn.primary:hover { background: var(--green-dark); }
+.btn.full { width: 100%; padding: 12px; font-size: 15px; }
+.section-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 10px; }
+.q-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 1.25rem; }
+.q-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 10px 12px; display: flex; align-items: flex-start; gap: 10px; }
+.vbadge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; margin-top: 2px; }
+.v-give { background: var(--green-light); color: var(--green-text); }
+.v-buy  { background: var(--blue-light);  color: var(--blue-text); }
+.v-show { background: var(--amber-light); color: var(--amber); }
+.v-make { background: var(--pink-light);  color: var(--pink-text); }
+.v-teach{ background: var(--purple-light);color: var(--purple-text); }
+.q-info { flex: 1; min-width: 0; }
+.q-en { font-size: 13px; font-weight: 600; color: var(--text); }
+.q-jp { font-size: 12px; color: var(--text3); margin-top: 2px; }
+.del-btn { background: none; border: none; color: var(--text3); cursor: pointer; font-size: 16px; line-height: 1; padding: 2px 4px; border-radius: 4px; flex-shrink: 0; transition: color 0.15s, background 0.15s; }
+.del-btn:hover { color: var(--red); background: var(--red-light); }
+.add-form { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem; }
+.add-form h3 { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 0.75rem; }
+.form-row { display: grid; gap: 8px; margin-bottom: 8px; }
+.form-row.col3 { grid-template-columns: 1fr 1fr 1fr; }
+.form-row.col2 { grid-template-columns: 1fr 1fr; }
+.form-row input, .form-row select { width: 100%; padding: 8px 10px; border: 1.5px solid var(--border2); border-radius: var(--radius-sm); font-size: 13px; font-family: inherit; color: var(--text); background: var(--surface); outline: none; transition: border-color 0.15s; }
+.form-row input:focus, .form-row select:focus { border-color: var(--green); }
+.form-hint { font-size: 11px; color: var(--text3); margin-bottom: 10px; font-weight: 600; }
+.name-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2rem 1.5rem; max-width: 360px; margin: 2rem auto 0; }
+.name-card h2 { font-size: 18px; font-weight: 700; text-align: center; margin-bottom: 1.25rem; }
+.sel-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1rem; }
+.sel-grid select { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border2); border-radius: var(--radius-sm); font-size: 15px; font-family: inherit; color: var(--text); background: var(--surface); outline: none; transition: border-color 0.15s; cursor: pointer; }
+.sel-grid select:focus { border-color: var(--green); }
+.game-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+.stats { display: flex; gap: 8px; }
+.stat-box { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 6px 14px; text-align: center; min-width: 56px; }
+.stat-val { font-size: 20px; font-weight: 900; color: var(--text); line-height: 1.2; }
+.stat-lbl { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.5px; text-transform: uppercase; }
+.progress-wrap { height: 5px; background: var(--surface2); border-radius: 3px; margin-bottom: 1rem; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--green); border-radius: 3px; transition: width 0.4s; }
+.timer-ring { position: relative; width: 56px; height: 56px; flex-shrink: 0; }
+.timer-ring svg { transform: rotate(-90deg); }
+.timer-num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 900; color: var(--text); }
+.question-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; margin-bottom: 1rem; }
+.q-number { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text3); margin-bottom: 6px; }
+.q-japanese { font-size: 19px; font-weight: 700; color: var(--text); line-height: 1.5; margin-bottom: 4px; }
+.q-verb-hint { font-size: 12px; color: var(--text3); font-weight: 600; }
+.answer-zone { min-height: 56px; background: var(--surface); border: 2px dashed var(--border2); border-radius: var(--radius-sm); padding: 8px; display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; transition: border-color 0.2s, background 0.2s; }
+.answer-zone.correct { background: var(--green-light); border-color: var(--green); border-style: solid; }
+.answer-zone.wrong   { background: var(--red-light);   border-color: var(--red);   border-style: solid; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 1rem; }
+.chip { padding: 8px 16px; border-radius: 20px; border: 1.5px solid var(--border2); background: var(--surface); color: var(--text); font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: transform 0.1s, background 0.1s; user-select: none; touch-action: manipulation; }
+.chip:hover { transform: translateY(-2px); background: var(--surface2); }
+.chip:active { transform: scale(0.95); }
+.chip.used { opacity: 0.3; pointer-events: none; }
+.chip.answer-chip { background: var(--green-light); border-color: rgba(29,158,117,0.3); color: var(--green-text); }
+.chip.answer-chip:hover { background: var(--red-light); border-color: rgba(226,75,74,0.3); color: var(--red-text); }
+.feedback-bar { font-size: 13px; font-weight: 700; padding: 10px 14px; border-radius: var(--radius-sm); margin-bottom: 0.75rem; display: none; }
+.feedback-bar.show { display: block; }
+.feedback-bar.ok { background: var(--green-light); color: var(--green-text); }
+.feedback-bar.ng { background: var(--red-light); color: var(--red-text); }
+.action-row { display: flex; gap: 8px; justify-content: flex-end; }
+.btn-skip { padding: 9px 18px; border-radius: 20px; border: 1.5px solid var(--border2); background: transparent; color: var(--text2); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s; }
+.btn-skip:hover { background: var(--surface2); }
+.btn-check { padding: 9px 22px; border-radius: 20px; border: none; background: var(--green); color: #fff; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background 0.15s, transform 0.1s; }
+.btn-check:hover { background: var(--green-dark); }
+.btn-check:active { transform: scale(0.97); }
+.btn-check:disabled { opacity: 0.35; cursor: default; }
+.result-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 2.5rem 1.5rem 2rem; text-align: center; margin-top: 1.5rem; }
+.result-player { font-size: 13px; font-weight: 700; color: var(--text3); letter-spacing: 0.5px; margin-bottom: 0.25rem; }
+.result-score-num { font-size: 64px; font-weight: 900; color: var(--text); line-height: 1; margin: 0.25rem 0; }
+.result-score-lbl { font-size: 14px; font-weight: 700; color: var(--text3); margin-bottom: 1.5rem; }
+.result-stats { display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem; }
+.rs { background: var(--bg); border-radius: var(--radius-sm); padding: 10px 20px; text-align: center; }
+.rs .v { font-size: 24px; font-weight: 900; color: var(--text); }
+.rs .l { font-size: 11px; font-weight: 700; color: var(--text3); letter-spacing: 0.5px; }
+.ranking-block { margin-top: 1.5rem; text-align: left; margin-bottom: 1.5rem; }
+.ranking-title { font-size: 13px; font-weight: 700; color: var(--text3); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.rank-list { display: flex; flex-direction: column; gap: 4px; }
+.rank-row { display: flex; align-items: center; gap: 10px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 9px 12px; font-size: 13px; }
+.rank-row.me { background: var(--green-light); border-color: rgba(29,158,117,0.3); }
+.rank-num { width: 24px; font-size: 11px; font-weight: 700; color: var(--text3); flex-shrink: 0; text-align: center; }
+.rank-medal { font-size: 16px; }
+.rank-name { flex: 1; font-weight: 700; color: var(--text); }
+.rank-score { font-weight: 900; color: var(--text); min-width: 52px; text-align: right; }
+.rank-time { font-size: 11px; color: var(--text3); min-width: 36px; text-align: right; }
+.rank-loading { font-size: 13px; color: var(--text3); text-align: center; padding: 1rem; }
+.rank-error { font-size: 12px; color: var(--red); text-align: center; padding: 0.5rem; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- トップ -->
+<div class="screen active" id="s-mode">
+  <div class="mode-hero">
+    <h1>語順タイムアタック</h1>
+    <p class="sub">SVOO — give / buy / show / make / teach</p>
+  </div>
+  <div class="mode-grid">
+    <div class="mode-card" onclick="goTo('s-pw')">
+      <span class="mode-icon">🔐</span>
+      <div class="mode-label">先生モード</div>
+      <div class="mode-desc">問題の編集・追加</div>
+    </div>
+    <div class="mode-card student" onclick="goTo('s-name')">
+      <span class="mode-icon">⚡</span>
+      <div class="mode-label">生徒モード</div>
+      <div class="mode-desc">ゲームスタート！</div>
+    </div>
+  </div>
+</div>
+
+<!-- パスワード -->
+<div class="screen" id="s-pw">
+  <div class="top-bar">
+    <button class="back-link" onclick="goTo('s-mode')">← 戻る</button>
+    <span class="bar-title">先生モード</span>
+  </div>
+  <div class="center-card">
+    <h2>🔐 パスワード入力</h2>
+    <p>先生用のパスワードを入力してください</p>
+    <input type="password" id="pw-input" placeholder="パスワード" onkeydown="if(event.key==='Enter')checkPw()" />
+    <div class="pw-err" id="pw-err"></div>
+    <div class="btn-row">
+      <button class="btn" onclick="goTo('s-mode')">キャンセル</button>
+      <button class="btn primary" onclick="checkPw()">入室する</button>
+    </div>
+  </div>
+</div>
+
+<!-- 先生モード -->
+<div class="screen" id="s-teacher">
+  <div class="top-bar">
+    <button class="back-link" onclick="goTo('s-mode')">← 戻る</button>
+    <span class="bar-title">問題編集</span>
+  </div>
+  <p class="section-label">登録済みの問題</p>
+  <div class="q-list" id="q-list"></div>
+  <div class="add-form">
+    <h3>＋ 問題を追加</h3>
+    <div class="form-row col3">
+      <input id="f-subj" placeholder="主語 (I / She)" />
+      <select id="f-verb">
+        <option value="give">give</option>
+        <option value="buy">buy</option>
+        <option value="show">show</option>
+        <option value="make">make</option>
+        <option value="teach">teach</option>
+      </select>
+      <input id="f-person" placeholder="人 (my mom)" />
+    </div>
+    <div class="form-row col2">
+      <input id="f-thing" placeholder="もの (a book)" />
+      <input id="f-jp" placeholder="日本語訳" />
+    </div>
+    <p class="form-hint">※ 語順は自動でシャッフルして出題されます</p>
+    <div style="text-align:right">
+      <button class="btn primary" onclick="addQuestion()">追加する</button>
+    </div>
+  </div>
+  <button class="btn full" style="color:var(--red);border-color:var(--red);margin-top:0.5rem" onclick="clearRanking()">
+    🗑 ランキングをリセット
+  </button>
+</div>
+
+<!-- 生徒：クラス・番号選択 -->
+<div class="screen" id="s-name">
+  <div class="top-bar">
+    <button class="back-link" onclick="goTo('s-mode')">← 戻る</button>
+  </div>
+  <div class="name-card">
+    <h2>クラスと番号を選ぼう！</h2>
+    <div class="sel-grid">
+      <select id="sel-class">
+        <option value="">クラス</option>
+        <option>1組</option><option>2組</option><option>3組</option><option>4組</option>
+        <option>5組</option><option>6組</option><option>7組</option><option>8組</option>
+      </select>
+      <select id="sel-num">
+        <option value="">番号</option>
+      </select>
+    </div>
+    <button class="btn primary full" onclick="startGame()">ゲームスタート！⚡</button>
+  </div>
+</div>
+
+<!-- ゲーム -->
+<div class="screen" id="s-game">
+  <div class="game-header">
+    <div class="stats">
+      <div class="stat-box">
+        <div class="stat-val" id="g-score">0</div>
+        <div class="stat-lbl">スコア</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="g-q">1/10</div>
+        <div class="stat-lbl">問題</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-val" id="g-streak">0</div>
+        <div class="stat-lbl">連続</div>
+      </div>
+    </div>
+    <div class="timer-ring">
+      <svg width="56" height="56" viewBox="0 0 56 56">
+        <circle cx="28" cy="28" r="23" fill="none" stroke-width="4" stroke="#E5E3DE"/>
+        <circle id="timer-arc" cx="28" cy="28" r="23" fill="none" stroke-width="4"
+          stroke="#1D9E75" stroke-dasharray="144.5" stroke-dashoffset="0" stroke-linecap="round"/>
+      </svg>
+      <div class="timer-num" id="timer-num">20</div>
+    </div>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+  </div>
+  <div class="question-card">
+    <div class="q-number" id="q-number">問題 1 / 10</div>
+    <div class="q-japanese" id="q-japanese">—</div>
+    <div class="q-verb-hint" id="q-verb-hint">動詞: give</div>
+  </div>
+  <div class="answer-zone" id="answer-zone"></div>
+  <div class="chips" id="word-chips"></div>
+  <div class="feedback-bar" id="feedback"></div>
+  <div class="action-row">
+    <button class="btn-skip" onclick="skipQ()">スキップ</button>
+    <button class="btn-check" id="btn-check" onclick="checkAnswer()" disabled>確認する</button>
+  </div>
+</div>
+
+<!-- 結果 -->
+<div class="screen" id="s-result">
+  <div class="result-card">
+    <div class="result-player" id="r-player">1組 1番</div>
+    <div class="result-score-num" id="r-score">0</div>
+    <div class="result-score-lbl">点</div>
+    <div class="result-stats">
+      <div class="rs"><div class="v" id="r-correct">0</div><div class="l">正解</div></div>
+      <div class="rs"><div class="v" id="r-wrong">0</div><div class="l">ミス</div></div>
+      <div class="rs"><div class="v" id="r-time">0s</div><div class="l">タイム</div></div>
+    </div>
+    <div class="ranking-block">
+      <div class="ranking-title">🏆 クラスランキング TOP10</div>
+      <div class="rank-list" id="rank-list">
+        <div class="rank-loading">集計中...</div>
+      </div>
+    </div>
+    <button class="btn primary full" onclick="goTo('s-mode')">もう一度やる</button>
+  </div>
+</div>
+
+</div>
+
+<script>
+const SUPABASE_URL = 'https://fvhzgzmuefhgxuhogagx.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZ2aHpnem11ZWZoZ3h1aG9nYWd4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg1NTg4NDIsImV4cCI6MjA5NDEzNDg0Mn0.3tumEm2jMJX8SLLfTJH-Do660GSP08sxViva9JQvZKE';
+
+const sbHeaders = {
+  'apikey': SUPABASE_KEY,
+  'Authorization': 'Bearer ' + SUPABASE_KEY,
+  'Content-Type': 'application/json'
+};
+
+async function saveScore(player, score, correct, time_sec) {
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/scores', {
+      method: 'POST',
+      headers: { ...sbHeaders, 'Prefer': 'return=minimal' },
+      body: JSON.stringify({ player, score, correct, time_sec })
+    });
+  } catch(e) { console.warn('保存失敗', e); }
+}
+
+async function loadRanking() {
+  try {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/scores?select=player,score,correct,time_sec&order=score.desc,time_sec.asc&limit=10',
+      { headers: sbHeaders }
+    );
+    if (!res.ok) throw new Error();
+    return await res.json();
+  } catch(e) { return null; }
+}
+
+async function clearAllScores() {
+  try {
+    await fetch(SUPABASE_URL + '/rest/v1/scores?id=gte.0', {
+      method: 'DELETE',
+      headers: sbHeaders
+    });
+  } catch(e) { console.warn('削除失敗', e); }
+}
+
+const PASS = 'teacher6';
+let questions = [
+  {subj:'I',    verb:'give',  person:'my friend',   thing:'a present',   jp:'友達にプレゼントをあげる'},
+  {subj:'I',    verb:'give',  person:'my dog',      thing:'some food',   jp:'犬にごはんをあげる'},
+  {subj:'She',  verb:'give',  person:'her teacher', thing:'a card',      jp:'先生にカードをあげる'},
+  {subj:'I',    verb:'buy',   person:'my mom',      thing:'some flowers',jp:'お母さんに花を買う'},
+  {subj:'He',   verb:'buy',   person:'his brother', thing:'a game',      jp:'弟にゲームを買う'},
+  {subj:'I',    verb:'show',  person:'my dad',      thing:'my drawing',  jp:'お父さんに絵を見せる'},
+  {subj:'We',   verb:'show',  person:'the class',   thing:'our photo',   jp:'クラスに写真を見せる'},
+  {subj:'I',    verb:'make',  person:'my friend',   thing:'a cake',      jp:'友達にケーキを作る'},
+  {subj:'She',  verb:'make',  person:'her sister',  thing:'lunch',       jp:'妹にお昼ご飯を作る'},
+  {subj:'I',    verb:'teach', person:'my mom',      thing:'English',     jp:'お母さんに英語を教える'},
+  {subj:'He',   verb:'teach', person:'his friend',  thing:'the song',    jp:'友達に歌を教える'},
+  {subj:'I',    verb:'buy',   person:'my dad',      thing:'a coffee',    jp:'お父さんにコーヒーを買う'},
+];
+
+let currentPlayer='', gameQuestions=[], currentQ=0;
+let score=0, correctCount=0, wrongCount=0, streak=0;
+let timerInterval=null, timeLeft=20, startTime=0;
+let currentAnswer=[], answered=false;
+
+const selNum = document.getElementById('sel-num');
+for (let i=1; i<=40; i++) {
+  const o = document.createElement('option');
+  o.value = i; o.textContent = i + '番';
+  selNum.appendChild(o);
+}
+
+function goTo(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  if (id === 's-teacher') renderTeacher();
+  if (id === 's-pw') {
+    document.getElementById('pw-input').value = '';
+    document.getElementById('pw-err').textContent = '';
+    setTimeout(() => document.getElementById('pw-input').focus(), 100);
+  }
+}
+
+function checkPw() {
+  if (document.getElementById('pw-input').value === PASS) goTo('s-teacher');
+  else document.getElementById('pw-err').textContent = 'パスワードが違います';
+}
+
+function startGame() {
+  const cls = document.getElementById('sel-class').value;
+  const num = document.getElementById('sel-num').value;
+  if (!cls || !num) { alert('クラスと番号を選んでください'); return; }
+  currentPlayer = cls + ' ' + num + '番';
+  gameQuestions = shuffle([...questions]).slice(0, 10);
+  currentQ=0; score=0; correctCount=0; wrongCount=0; streak=0;
+  startTime = Date.now();
+  goTo('s-game');
+  loadQuestion();
+}
+
+function shuffle(a) { return a.sort(() => Math.random() - 0.5); }
+
+function loadQuestion() {
+  if (currentQ >= gameQuestions.length) { endGame(); return; }
+  answered = false;
+  const q = gameQuestions[currentQ];
+  currentAnswer = [];
+  document.getElementById('q-number').textContent = '問題 ' + (currentQ+1) + ' / ' + gameQuestions.length;
+  document.getElementById('q-japanese').textContent = q.jp;
+  document.getElementById('q-verb-hint').textContent = '動詞: ' + q.verb;
+  document.getElementById('g-q').textContent = (currentQ+1) + '/' + gameQuestions.length;
+  document.getElementById('g-score').textContent = score;
+  document.getElementById('g-streak').textContent = streak;
+  document.getElementById('progress-bar').style.width = Math.round((currentQ/gameQuestions.length)*100) + '%';
+  const az = document.getElementById('answer-zone');
+  az.innerHTML = ''; az.className = 'answer-zone';
+  const chips = shuffle([q.subj, q.verb, q.person, q.thing]);
+  const wc = document.getElementById('word-chips');
+  wc.innerHTML = '';
+  chips.forEach((w, i) => {
+    const btn = document.createElement('button');
+    btn.className='chip'; btn.textContent=w; btn.dataset.idx=i; btn.dataset.word=w;
+    btn.onclick = () => pickChip(btn);
+    wc.appendChild(btn);
+  });
+  document.getElementById('feedback').className = 'feedback-bar';
+  document.getElementById('btn-check').disabled = true;
+  startTimer();
+}
+
+function pickChip(btn) {
+  if (answered) return;
+  btn.classList.add('used');
+  currentAnswer.push(btn.dataset.word);
+  const az = document.getElementById('answer-zone');
+  const ac = document.createElement('button');
+  ac.className='chip answer-chip'; ac.textContent=btn.dataset.word; ac.dataset.srcIdx=btn.dataset.idx;
+  ac.onclick = () => removeFromAnswer(ac, btn.dataset.idx);
+  az.appendChild(ac);
+  document.getElementById('btn-check').disabled = false;
+}
+
+function removeFromAnswer(ac, srcIdx) {
+  if (answered) return;
+  const idx = currentAnswer.indexOf(ac.textContent);
+  if (idx > -1) currentAnswer.splice(idx, 1);
+  ac.remove();
+  document.querySelectorAll('#word-chips .chip[data-idx="'+srcIdx+'"]').forEach(c => c.classList.remove('used'));
+  document.getElementById('btn-check').disabled = currentAnswer.length === 0;
+}
+
+function checkAnswer() {
+  if (answered) return;
+  answered=true; clearInterval(timerInterval);
+  const q = gameQuestions[currentQ];
+  const correct = [q.subj, q.verb, q.person, q.thing];
+  const ok = JSON.stringify(currentAnswer) === JSON.stringify(correct);
+  const fb = document.getElementById('feedback');
+  const az = document.getElementById('answer-zone');
+  if (ok) {
+    const pts = Math.max(10, timeLeft*5);
+    score+=pts; correctCount++; streak++;
+    fb.textContent='正解！ +'+pts+'点'; fb.className='feedback-bar show ok';
+    az.className='answer-zone correct';
+  } else {
+    wrongCount++; streak=0;
+    fb.textContent='残念！正解は: '+correct.join(' '); fb.className='feedback-bar show ng';
+    az.className='answer-zone wrong';
+  }
+  document.getElementById('g-score').textContent = score;
+  document.getElementById('g-streak').textContent = streak;
+  setTimeout(() => { currentQ++; loadQuestion(); }, 1800);
+}
+
+function skipQ() {
+  if (answered) return;
+  answered=true; clearInterval(timerInterval);
+  wrongCount++; streak=0;
+  const q = gameQuestions[currentQ];
+  document.getElementById('feedback').textContent = '正解は: '+q.subj+' '+q.verb+' '+q.person+' '+q.thing;
+  document.getElementById('feedback').className = 'feedback-bar show ng';
+  document.getElementById('g-streak').textContent = streak;
+  setTimeout(() => { currentQ++; loadQuestion(); }, 1800);
+}
+
+function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft=20; updateTimerUI();
+  timerInterval = setInterval(() => {
+    timeLeft--; updateTimerUI();
+    if (timeLeft<=0) { clearInterval(timerInterval); if (!answered) skipQ(); }
+  }, 1000);
+}
+
+function updateTimerUI() {
+  document.getElementById('timer-num').textContent = timeLeft;
+  const arc = document.getElementById('timer-arc');
+  arc.style.strokeDashoffset = (144.5*(1-timeLeft/20)).toFixed(1);
+  arc.style.stroke = timeLeft>10?'#1D9E75':timeLeft>5?'#BA7517':'#E24B4A';
+}
+
+async function endGame() {
+  clearInterval(timerInterval);
+  const elapsed = Math.round((Date.now()-startTime)/1000);
+  document.getElementById('r-player').textContent = currentPlayer;
+  document.getElementById('r-score').textContent = score;
+  document.getElementById('r-correct').textContent = correctCount;
+  document.getElementById('r-wrong').textContent = wrongCount;
+  document.getElementById('r-time').textContent = elapsed+'s';
+  goTo('s-result');
+  await saveScore(currentPlayer, score, correctCount, elapsed);
+  const data = await loadRanking();
+  renderRanking(data);
+}
+
+function renderRanking(data) {
+  const list = document.getElementById('rank-list');
+  if (!data) { list.innerHTML='<div class="rank-error">ランキングの取得に失敗しました</div>'; return; }
+  if (data.length===0) { list.innerHTML='<div class="rank-loading">まだ記録がありません</div>'; return; }
+  const medals = ['🥇','🥈','🥉'];
+  list.innerHTML = data.map((r,i) => {
+    const isMe = r.player === currentPlayer;
+    const numCell = i<3
+      ? '<span class="rank-num"><span class="rank-medal">'+medals[i]+'</span></span>'
+      : '<span class="rank-num">'+(i+1)+'</span>';
+    return '<div class="rank-row'+(isMe?' me':'')+'">'
+      + numCell
+      + '<span class="rank-name">'+r.player+'</span>'
+      + '<span class="rank-score">'+r.score+'点</span>'
+      + '<span class="rank-time">'+r.time_sec+'s</span>'
+      + '</div>';
+  }).join('');
+}
+
+async function clearRanking() {
+  if (!confirm('ランキングを全件削除しますか？\nこの操作は取り消せません。')) return;
+  await clearAllScores();
+  alert('ランキングをリセットしました！');
+}
+
+function renderTeacher() {
+  const list = document.getElementById('q-list');
+  list.innerHTML = '';
+  questions.forEach((q,i) => {
+    const d = document.createElement('div');
+    d.className='q-item';
+    d.innerHTML='<span class="vbadge v-'+q.verb+'">'+q.verb+'</span>'
+      +'<div class="q-info"><div class="q-en">'+q.subj+' '+q.verb+' '+q.person+' '+q.thing+'</div>'
+      +'<div class="q-jp">'+q.jp+'</div></div>'
+      +'<button class="del-btn" onclick="deleteQ('+i+')" aria-label="削除">✕</button>';
+    list.appendChild(d);
+  });
+}
+
+function deleteQ(i) {
+  if (questions.length<=3) { alert('最低3問は必要です'); return; }
+  questions.splice(i,1); renderTeacher();
+}
+
+function addQuestion() {
+  const subj   = document.getElementById('f-subj').value.trim();
+  const verb   = document.getElementById('f-verb').value;
+  const person = document.getElementById('f-person').value.trim();
+  const thing  = document.getElementById('f-thing').value.trim();
+  const jp     = document.getElementById('f-jp').value.trim();
+  if (!subj||!person||!thing||!jp) { alert('全て入力してください'); return; }
+  questions.push({subj,verb,person,thing,jp});
+  ['f-subj','f-person','f-thing','f-jp'].forEach(id => document.getElementById(id).value='');
+  renderTeacher();
+}
+</script>
+</body>
+</html>
