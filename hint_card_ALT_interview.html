@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hint Card — ALT Interview</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --food:     #E8522A;
+    --activity: #2A7E4F;
+    --place:    #2563C4;
+    --transport:#8B2FC9;
+    --hobby:    #C4882A;
+    --bg:       #F0EDE8;
+    --card:     #FDFCFA;
+    --text:     #1A1714;
+    --sub:      #6B6460;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Outfit', 'Noto Sans JP', sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    padding: 40px 32px;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+
+  header .label {
+    display: inline-block;
+    background: var(--text);
+    color: #FDFCFA;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    padding: 5px 16px;
+    border-radius: 2px;
+    margin-bottom: 14px;
+  }
+
+  header h1 {
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    color: var(--text);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+
+  header p {
+    font-size: 15px;
+    color: var(--sub);
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  .instruction {
+    max-width: 860px;
+    margin: 0 auto 48px;
+    background: var(--text);
+    color: #FDFCFA;
+    border-radius: 12px;
+    padding: 20px 28px;
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+  }
+  .instruction .icon { font-size: 28px; flex-shrink: 0; margin-top: 2px; }
+  .instruction-body h3 { font-size: 14px; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 6px; color: #F4C87A; }
+  .instruction-body p { font-size: 14px; line-height: 1.7; font-family: 'Noto Sans JP', sans-serif; color: #D4CFC8; }
+  .instruction-body strong { color: #F4C87A; font-weight: 700; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: 24px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 28px rgba(0,0,0,0.12);
+  }
+
+  .card-header {
+    padding: 20px 24px 16px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .card-icon {
+    width: 52px; height: 52px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .card-titles { flex: 1; }
+  .card-titles .en {
+    font-size: 22px; font-weight: 800; letter-spacing: -0.01em;
+    line-height: 1.1;
+  }
+  .card-titles .jp {
+    font-size: 12px; font-weight: 500;
+    color: var(--sub); margin-top: 2px;
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+  .card-badge {
+    font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 4px 10px;
+    border-radius: 20px; color: #fff;
+    flex-shrink: 0;
+  }
+
+  .divider { height: 2px; margin: 0 24px; border-radius: 2px; opacity: 0.15; }
+
+  .hints { padding: 16px 24px 24px; }
+
+  .hint-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+  }
+  .hint-item:last-child { border-bottom: none; }
+
+  .hint-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 11px; font-weight: 800; color: #fff;
+    flex-shrink: 0; margin-top: 2px;
+  }
+
+  .hint-text { flex: 1; }
+  .hint-en {
+    font-size: 15px; font-weight: 600; color: var(--text);
+    line-height: 1.3;
+  }
+  .hint-jp {
+    font-size: 12px; color: var(--sub); margin-top: 3px;
+    font-family: 'Noto Sans JP', sans-serif; line-height: 1.5;
+  }
+  .hint-example {
+    font-size: 12px; color: var(--sub); margin-top: 5px;
+    font-family: 'Noto Sans JP', sans-serif; line-height: 1.5;
+    font-style: italic;
+  }
+  .hint-example span { font-style: normal; font-weight: 600; }
+
+  /* Theme colors */
+  .food   .card-header { border-top: 4px solid var(--food); }
+  .food   .card-icon   { background: #FDE8E1; }
+  .food   .card-titles .en { color: var(--food); }
+  .food   .card-badge  { background: var(--food); }
+  .food   .divider     { background: var(--food); }
+  .food   .hint-num    { background: var(--food); }
+
+  .activity .card-header { border-top: 4px solid var(--activity); }
+  .activity .card-icon   { background: #DFF2E8; }
+  .activity .card-titles .en { color: var(--activity); }
+  .activity .card-badge  { background: var(--activity); }
+  .activity .divider     { background: var(--activity); }
+  .activity .hint-num    { background: var(--activity); }
+
+  .place .card-header { border-top: 4px solid var(--place); }
+  .place .card-icon   { background: #DCE9FB; }
+  .place .card-titles .en { color: var(--place); }
+  .place .card-badge  { background: var(--place); }
+  .place .divider     { background: var(--place); }
+  .place .hint-num    { background: var(--place); }
+
+  .transport .card-header { border-top: 4px solid var(--transport); }
+  .transport .card-icon   { background: #F0E3FB; }
+  .transport .card-titles .en { color: var(--transport); }
+  .transport .card-badge  { background: var(--transport); }
+  .transport .divider     { background: var(--transport); }
+  .transport .hint-num    { background: var(--transport); }
+
+  .hobby .card-header { border-top: 4px solid var(--hobby); }
+  .hobby .card-icon   { background: #FBF0DC; }
+  .hobby .card-titles .en { color: var(--hobby); }
+  .hobby .card-badge  { background: var(--hobby); }
+  .hobby .divider     { background: var(--hobby); }
+  .hobby .hint-num    { background: var(--hobby); }
+
+  footer {
+    text-align: center;
+    margin-top: 56px;
+    font-size: 13px;
+    color: var(--sub);
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  @media print {
+    body { padding: 20px; background: white; }
+    .card { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+    .card:hover { transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="label">ALT Interview — Hint Card</div>
+  <h1>理由を言おう！<br>because ヒントカード</h1>
+  <p>ALTの質問に答えるとき、このカードを参考にしよう。<br>自分の言葉で言えたらさらに◎！</p>
+</header>
+
+<div class="instruction">
+  <div class="icon">💡</div>
+  <div class="instruction-body">
+    <h3>使い方 How to use</h3>
+    <p>ALTからテーマに関する質問が来たら、<strong>①まず答えを言う → ②because で理由を続ける</strong><br>
+    例）"Do you like spicy food?" → <strong>"Yes! I like it because it's delicious!"</strong><br>
+    ヒントはあくまで参考。自分の本音で話してみよう！</p>
+  </div>
+</div>
+
+<div class="grid">
+
+  <!-- FOOD -->
+  <div class="card food">
+    <div class="card-header">
+      <div class="card-icon">🍜</div>
+      <div class="card-titles">
+        <div class="en">Food</div>
+        <div class="jp">食べ物について</div>
+      </div>
+      <div class="card-badge">Topic 1</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hints">
+      <div class="hint-item">
+        <div class="hint-num">1</div>
+        <div class="hint-text">
+          <div class="hint-en">it's delicious / tasty</div>
+          <div class="hint-jp">おいしいから</div>
+          <div class="hint-example">→ <span>"I like ramen because it's delicious!"</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">2</div>
+        <div class="hint-text">
+          <div class="hint-en">it's too spicy / sweet / sour</div>
+          <div class="hint-jp">辛すぎる・甘すぎる・酸っぱいから</div>
+          <div class="hint-example">→ <span>"I don't like it because it's too spicy."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">3</div>
+        <div class="hint-text">
+          <div class="hint-en">it makes me happy / energetic</div>
+          <div class="hint-jp">元気になれる・幸せになれるから</div>
+          <div class="hint-example">→ <span>"I love chocolate because it makes me happy!"</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">4</div>
+        <div class="hint-text">
+          <div class="hint-en">it's good / not good for my health</div>
+          <div class="hint-jp">体にいい・体によくないから</div>
+          <div class="hint-example">→ <span>"I eat salad because it's good for my health."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">5</div>
+        <div class="hint-text">
+          <div class="hint-en">my family / mom often makes it</div>
+          <div class="hint-jp">家族がよく作ってくれるから</div>
+          <div class="hint-example">→ <span>"I love curry because my mom often makes it."</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY -->
+  <div class="card activity">
+    <div class="card-header">
+      <div class="card-icon">🏄</div>
+      <div class="card-titles">
+        <div class="en">Activity</div>
+        <div class="jp">アクティビティについて</div>
+      </div>
+      <div class="card-badge">Topic 2</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hints">
+      <div class="hint-item">
+        <div class="hint-num">1</div>
+        <div class="hint-text">
+          <div class="hint-en">it's exciting / thrilling</div>
+          <div class="hint-jp">わくわくする・スリルがあるから</div>
+          <div class="hint-example">→ <span>"I want to try surfing because it's exciting!"</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">2</div>
+        <div class="hint-text">
+          <div class="hint-en">it's relaxing / calming</div>
+          <div class="hint-jp">リラックスできる・落ち着くから</div>
+          <div class="hint-example">→ <span>"I like fishing because it's relaxing."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">3</div>
+        <div class="hint-text">
+          <div class="hint-en">it's fun with friends / family</div>
+          <div class="hint-jp">友達・家族と楽しめるから</div>
+          <div class="hint-example">→ <span>"I love bowling because it's fun with friends!"</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">4</div>
+        <div class="hint-text">
+          <div class="hint-en">it's too hard / scary for me</div>
+          <div class="hint-jp">自分には難しすぎる・怖いから</div>
+          <div class="hint-example">→ <span>"I don't want to try it because it's too scary."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">5</div>
+        <div class="hint-text">
+          <div class="hint-en">I can feel refreshed</div>
+          <div class="hint-jp">気分転換になるから</div>
+          <div class="hint-example">→ <span>"I like running because I can feel refreshed."</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLACE -->
+  <div class="card place">
+    <div class="card-header">
+      <div class="card-icon">🗾</div>
+      <div class="card-titles">
+        <div class="en">Place</div>
+        <div class="jp">行き先・場所について</div>
+      </div>
+      <div class="card-badge">Topic 3</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hints">
+      <div class="hint-item">
+        <div class="hint-num">1</div>
+        <div class="hint-text">
+          <div class="hint-en">it's beautiful / stunning</div>
+          <div class="hint-jp">景色がきれいだから</div>
+          <div class="hint-example">→ <span>"I want to visit Kyoto because it's beautiful."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">2</div>
+        <div class="hint-text">
+          <div class="hint-en">there are many things to see / do</div>
+          <div class="hint-jp">見どころ・やることがたくさんあるから</div>
+          <div class="hint-example">→ <span>"I like Tokyo because there are many things to do."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">3</div>
+        <div class="hint-text">
+          <div class="hint-en">the food there is delicious</div>
+          <div class="hint-jp">そこの食べ物がおいしいから</div>
+          <div class="hint-example">→ <span>"I want to go to Osaka because the food is delicious!"</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">4</div>
+        <div class="hint-text">
+          <div class="hint-en">I've always wanted to go there</div>
+          <div class="hint-jp">ずっと行ってみたかったから</div>
+          <div class="hint-example">→ <span>"I want to visit Hawaii because I've always wanted to go."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">5</div>
+        <div class="hint-text">
+          <div class="hint-en">I can experience a different culture</div>
+          <div class="hint-jp">異文化を体験できるから</div>
+          <div class="hint-example">→ <span>"I want to go abroad because I can experience a different culture."</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TRANSPORT -->
+  <div class="card transport">
+    <div class="card-header">
+      <div class="card-icon">🚆</div>
+      <div class="card-titles">
+        <div class="en">Transport</div>
+        <div class="jp">移動手段について</div>
+      </div>
+      <div class="card-badge">Topic 4</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hints">
+      <div class="hint-item">
+        <div class="hint-num">1</div>
+        <div class="hint-text">
+          <div class="hint-en">it's fast / comfortable</div>
+          <div class="hint-jp">速い・快適だから</div>
+          <div class="hint-example">→ <span>"I like the Shinkansen because it's fast and comfortable."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">2</div>
+        <div class="hint-text">
+          <div class="hint-en">I can enjoy the view / scenery</div>
+          <div class="hint-jp">景色を楽しめるから</div>
+          <div class="hint-example">→ <span>"I like trains because I can enjoy the scenery."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">3</div>
+        <div class="hint-text">
+          <div class="hint-en">it's a little scary for me</div>
+          <div class="hint-jp">少し怖いから</div>
+          <div class="hint-example">→ <span>"I don't like flying because it's a little scary for me."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">4</div>
+        <div class="hint-text">
+          <div class="hint-en">it's eco-friendly / good for the earth</div>
+          <div class="hint-jp">環境にやさしいから</div>
+          <div class="hint-example">→ <span>"I like cycling because it's eco-friendly."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">5</div>
+        <div class="hint-text">
+          <div class="hint-en">I can go anywhere freely</div>
+          <div class="hint-jp">どこでも自由に行けるから</div>
+          <div class="hint-example">→ <span>"I like cars because I can go anywhere freely."</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HOBBY -->
+  <div class="card hobby">
+    <div class="card-header">
+      <div class="card-icon">🎨</div>
+      <div class="card-titles">
+        <div class="en">Hobby</div>
+        <div class="jp">趣味について</div>
+      </div>
+      <div class="card-badge">Topic 5</div>
+    </div>
+    <div class="divider"></div>
+    <div class="hints">
+      <div class="hint-item">
+        <div class="hint-num">1</div>
+        <div class="hint-text">
+          <div class="hint-en">it's fun / enjoyable</div>
+          <div class="hint-jp">楽しいから</div>
+          <div class="hint-example">→ <span>"My hobby is gaming because it's really fun!"</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">2</div>
+        <div class="hint-text">
+          <div class="hint-en">I can forget about everything</div>
+          <div class="hint-jp">いろんなことを忘れられるから</div>
+          <div class="hint-example">→ <span>"I love drawing because I can forget about everything."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">3</div>
+        <div class="hint-text">
+          <div class="hint-en">I've been doing it since I was little</div>
+          <div class="hint-jp">小さい頃からやっているから</div>
+          <div class="hint-example">→ <span>"I love soccer because I've been playing since I was little."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">4</div>
+        <div class="hint-text">
+          <div class="hint-en">it helps me relax / de-stress</div>
+          <div class="hint-jp">リラックス・ストレス発散になるから</div>
+          <div class="hint-example">→ <span>"I like listening to music because it helps me relax."</span></div>
+        </div>
+      </div>
+      <div class="hint-item">
+        <div class="hint-num">5</div>
+        <div class="hint-text">
+          <div class="hint-en">I want to get better at it</div>
+          <div class="hint-jp">もっと上手くなりたいから</div>
+          <div class="hint-example">→ <span>"I practice every day because I want to get better."</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🌟 ヒントはあくまで参考！　自分の言葉で話せたら最高です。</p>
+  <p style="margin-top:6px;">ALTインタビュー　because ヒントカード</p>
+</footer>
+
+</body>
+</html>
