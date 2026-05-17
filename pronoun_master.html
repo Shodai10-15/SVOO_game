@@ -1,0 +1,1676 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代名詞マスター</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;900&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy: #1B2A4A;
+  --navy-dark: #0F1A30;
+  --teal: #1D9E75;
+  --teal-dark: #0F6E56;
+  --teal-light: #E1F5EE;
+  --teal-text: #085041;
+  --gold: #EF9F27;
+  --gold-dark: #BA7517;
+  --gold-light: #FAEEDA;
+  --gold-text: #633806;
+  --red: #E24B4A;
+  --red-light: #FCEBEB;
+  --red-text: #791F1F;
+  --purple: #7F77DD;
+  --purple-light: #EEEDFE;
+  --purple-text: #3C3489;
+  --coral: #D85A30;
+  --coral-light: #FAECE7;
+  --coral-text: #712B13;
+  --bg: #F4F2EE;
+  --surface: #FFFFFF;
+  --surface2: #ECEAE5;
+  --border: rgba(0,0,0,0.08);
+  --border2: rgba(0,0,0,0.15);
+  --text: #1a1a1a;
+  --text2: #5a5a5a;
+  --text3: #9a9a9a;
+  --radius: 14px;
+  --radius-sm: 9px;
+  --radius-xs: 6px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', 'Noto Sans JP', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 1rem 1rem 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.app { width: 100%; max-width: 580px; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ===== TOP BAR ===== */
+.top-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 1.25rem;
+  padding-top: 0.5rem;
+}
+.back-btn {
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: inherit;
+  display: flex; align-items: center; gap: 4px;
+  transition: background 0.15s;
+}
+.back-btn:hover { background: var(--surface2); }
+.progress-wrap { flex: 1; height: 8px; background: var(--surface2); border-radius: 4px; overflow: hidden; }
+.progress-bar { height: 100%; background: var(--teal); border-radius: 4px; transition: width 0.4s ease; }
+.progress-label { font-size: 12px; font-weight: 700; color: var(--text3); white-space: nowrap; }
+
+/* ===== HOME ===== */
+.hero {
+  text-align: center;
+  padding: 2rem 0 1.5rem;
+}
+.hero-badge {
+  display: inline-block;
+  background: var(--navy);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  padding: 4px 14px;
+  border-radius: 20px;
+  margin-bottom: 1rem;
+  text-transform: uppercase;
+}
+.hero-title {
+  font-size: 38px;
+  font-weight: 900;
+  color: var(--navy);
+  line-height: 1.15;
+  margin-bottom: 0.5rem;
+}
+.hero-title span { color: var(--teal); }
+.hero-sub {
+  font-size: 14px;
+  color: var(--text2);
+  font-weight: 600;
+  margin-bottom: 2rem;
+}
+
+.name-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 2rem;
+}
+.name-input {
+  flex: 1;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+}
+.name-input:focus { border-color: var(--teal); }
+.name-input::placeholder { color: var(--text3); }
+
+.section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  color: var(--text3);
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+.mode-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+.mode-card {
+  background: var(--surface);
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 1.25rem 1rem;
+  cursor: pointer;
+  transition: border-color 0.2s, transform 0.1s, box-shadow 0.2s;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+.mode-card:hover { transform: translateY(-2px); border-color: var(--navy); }
+.mode-card.selected {
+  border-color: var(--teal);
+  background: var(--teal-light);
+}
+.mode-icon {
+  font-size: 26px;
+  margin-bottom: 8px;
+  display: block;
+}
+.mode-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--navy);
+  margin-bottom: 3px;
+}
+.mode-desc {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text3);
+  line-height: 1.4;
+}
+.mode-badge {
+  position: absolute;
+  top: 8px; right: 8px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  padding: 2px 8px;
+  border-radius: 20px;
+}
+.badge-easy { background: var(--teal-light); color: var(--teal-text); }
+.badge-mid  { background: var(--gold-light);  color: var(--gold-text); }
+.badge-hard { background: var(--coral-light); color: var(--coral-text); }
+.badge-find { background: var(--purple-light); color: var(--purple-text); }
+.badge-write { background: #E6F1FB; color: #0C447C; }
+
+.level-btns {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 1.5rem;
+}
+.level-btn {
+  flex: 1;
+  padding: 10px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.15s;
+  display: none;
+}
+.level-btn.visible { display: block; }
+.level-btn.selected { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+.start-btn {
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: var(--radius);
+  background: var(--navy);
+  color: #fff;
+  font-size: 17px;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, transform 0.1s;
+  letter-spacing: 0.5px;
+}
+.start-btn:hover { background: var(--teal-dark); }
+.start-btn:active { transform: scale(0.98); }
+.start-btn:disabled { opacity: 0.3; cursor: default; }
+
+/* ===== QUIZ COMMON ===== */
+.q-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 1rem;
+}
+.q-type-badge {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  padding: 3px 10px;
+  border-radius: 20px;
+  text-transform: uppercase;
+}
+.q-num { font-size: 13px; font-weight: 700; color: var(--text3); margin-left: auto; }
+.streak-pill {
+  display: flex; align-items: center; gap: 4px;
+  background: var(--gold-light); color: var(--gold-text);
+  font-size: 12px; font-weight: 700;
+  padding: 3px 10px; border-radius: 20px;
+}
+
+.question-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+}
+.q-jp {
+  font-size: 15px;
+  color: var(--text2);
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  line-height: 1.6;
+}
+.q-en {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--text);
+  line-height: 1.6;
+}
+.blank-box {
+  display: inline-block;
+  min-width: 80px;
+  border-bottom: 2.5px solid var(--navy);
+  vertical-align: baseline;
+  text-align: center;
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--teal);
+  padding: 0 4px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.blank-box.filled { color: var(--navy); border-color: var(--teal); }
+.blank-box.correct-ans { color: var(--teal-text); border-color: var(--teal); }
+.blank-box.wrong-ans { color: var(--red-text); border-color: var(--red); }
+
+/* ===== FILL-IN CHOICES ===== */
+.choices {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+.choice-btn {
+  padding: 10px 20px;
+  border: 1.5px solid var(--border2);
+  border-radius: 24px;
+  background: var(--surface);
+  font-family: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.choice-btn:hover:not(:disabled) { background: var(--surface2); transform: translateY(-1px); }
+.choice-btn:active:not(:disabled) { transform: scale(0.96); }
+.choice-btn.selected-choice { background: var(--navy); color: #fff; border-color: var(--navy); }
+.choice-btn.correct-choice { background: var(--teal-light); color: var(--teal-text); border-color: var(--teal); }
+.choice-btn.wrong-choice   { background: var(--red-light);  color: var(--red-text);  border-color: var(--red); }
+.choice-btn:disabled { opacity: 0.5; cursor: default; }
+
+/* ===== FEEDBACK BAR ===== */
+.feedback-bar {
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  display: none;
+  line-height: 1.5;
+}
+.feedback-bar.show { display: block; }
+.feedback-bar.ok { background: var(--teal-light); color: var(--teal-text); }
+.feedback-bar.ng { background: var(--red-light);  color: var(--red-text); }
+
+.action-row {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+}
+.btn-next {
+  padding: 10px 24px;
+  border-radius: 24px;
+  border: none;
+  background: var(--teal);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s, transform 0.1s;
+}
+.btn-next:hover { background: var(--teal-dark); }
+.btn-next:active { transform: scale(0.97); }
+.btn-next:disabled { opacity: 0.35; cursor: default; }
+.btn-check {
+  padding: 10px 24px;
+  border-radius: 24px;
+  border: none;
+  background: var(--navy);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+.btn-check:hover { background: #2a3d63; }
+.btn-check:disabled { opacity: 0.35; cursor: default; }
+
+/* ===== ERROR FIND ===== */
+.sentence-display {
+  font-size: 20px;
+  font-weight: 700;
+  line-height: 1.8;
+  margin-bottom: 0.5rem;
+}
+.word-chip {
+  display: inline-block;
+  padding: 2px 4px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  margin: 0 1px;
+}
+.word-chip.clickable:hover { background: var(--gold-light); color: var(--gold-text); }
+.word-chip.highlight-wrong { background: var(--red-light); color: var(--red-text); border-bottom: 2px solid var(--red); }
+.word-chip.highlight-correct { background: var(--teal-light); color: var(--teal-text); }
+
+.correction-input-row {
+  display: flex; gap: 8px; align-items: center;
+  margin-top: 0.75rem;
+  display: none;
+}
+.correction-input-row.show { display: flex; }
+.correction-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1.5px solid var(--navy);
+  border-radius: var(--radius-sm);
+  font-size: 15px; font-weight: 700;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+}
+.correction-input:focus { border-color: var(--teal); }
+
+/* ===== WRITING ===== */
+.writing-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 16px; font-weight: 700;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  outline: none;
+  transition: border-color 0.2s;
+  margin-bottom: 1rem;
+}
+.writing-input:focus { border-color: var(--navy); }
+.writing-input.correct-input { border-color: var(--teal); background: var(--teal-light); }
+.writing-input.wrong-input   { border-color: var(--red);  background: var(--red-light); }
+
+/* ===== GRAMMAR HINT TABLE ===== */
+.hint-toggle {
+  background: none; border: none; cursor: pointer;
+  font-family: inherit; font-size: 12px; font-weight: 700;
+  color: var(--text3); display: flex; align-items: center; gap: 4px;
+  margin-bottom: 0.5rem; padding: 0;
+}
+.hint-toggle:hover { color: var(--navy); }
+.hint-table-wrap { display: none; margin-bottom: 1rem; }
+.hint-table-wrap.open { display: block; }
+.hint-table {
+  width: 100%; border-collapse: collapse;
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius-sm); overflow: hidden;
+  font-size: 12px;
+}
+.hint-table th {
+  background: var(--navy); color: #fff;
+  padding: 6px 10px; font-size: 10px; font-weight: 700;
+  letter-spacing: 0.5px; text-align: left;
+}
+.hint-table td { padding: 5px 10px; border-top: 1px solid var(--border); font-weight: 600; }
+.hint-table tr:nth-child(even) td { background: var(--bg); }
+.ht-subj { color: var(--teal-text); font-weight: 800; }
+.ht-poss { color: var(--purple-text); font-weight: 800; }
+.ht-obj  { color: var(--coral-text); font-weight: 800; }
+.ht-posp { color: var(--gold-text);  font-weight: 800; }
+
+/* ===== RESULT ===== */
+.result-wrap { padding: 1.5rem 0; }
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 2rem 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.result-emoji { font-size: 52px; margin-bottom: 0.5rem; line-height: 1; }
+.result-title { font-size: 26px; font-weight: 900; color: var(--navy); margin-bottom: 0.25rem; }
+.result-sub   { font-size: 13px; font-weight: 600; color: var(--text2); margin-bottom: 1.5rem; }
+.result-score-big { font-size: 64px; font-weight: 900; color: var(--teal); line-height: 1; }
+.result-score-label { font-size: 14px; font-weight: 700; color: var(--text3); margin-bottom: 1.5rem; }
+.result-stats {
+  display: flex; gap: 10px; justify-content: center; margin-bottom: 1.5rem;
+}
+.rs { background: var(--bg); border-radius: var(--radius-sm); padding: 10px 20px; text-align: center; }
+.rs .v { font-size: 22px; font-weight: 900; color: var(--text); }
+.rs .l { font-size: 10px; font-weight: 700; color: var(--text3); letter-spacing: 0.5px; }
+
+.perfect-banner {
+  background: linear-gradient(135deg, var(--gold), #f5c842);
+  color: var(--gold-text);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px;
+  font-size: 14px; font-weight: 800;
+  margin-bottom: 1.25rem;
+  display: none;
+}
+.perfect-banner.show { display: block; }
+
+.cert-name-row {
+  display: flex; gap: 8px; margin-bottom: 1rem;
+  display: none;
+}
+.cert-name-row.show { display: flex; }
+.cert-input {
+  flex: 1;
+  padding: 10px 14px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  font-size: 14px; font-weight: 600;
+  font-family: inherit; background: var(--surface); color: var(--text);
+  outline: none;
+}
+.cert-input:focus { border-color: var(--gold-dark); }
+
+.cert-dl-btn {
+  padding: 11px 20px;
+  border: none; border-radius: var(--radius-sm);
+  background: var(--gold-dark); color: #fff;
+  font-size: 13px; font-weight: 700; font-family: inherit;
+  cursor: pointer; transition: background 0.15s;
+  white-space: nowrap;
+}
+.cert-dl-btn:hover { background: var(--coral); }
+
+.result-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.btn-retry {
+  flex: 1;
+  padding: 13px;
+  border: 1.5px solid var(--border2);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-size: 14px; font-weight: 700; font-family: inherit;
+  cursor: pointer; color: var(--text2);
+  transition: background 0.15s;
+}
+.btn-retry:hover { background: var(--surface2); }
+.btn-home {
+  flex: 1;
+  padding: 13px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: var(--navy);
+  color: #fff;
+  font-size: 14px; font-weight: 700; font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.btn-home:hover { background: var(--teal-dark); }
+
+/* ===== CANVAS (hidden for cert generation) ===== */
+#cert-canvas { display: none; }
+
+/* ===== ANIMATION ===== */
+@keyframes pop { 0%{transform:scale(0.8);opacity:0} 70%{transform:scale(1.05)} 100%{transform:scale(1);opacity:1} }
+.pop-in { animation: pop 0.3s ease forwards; }
+
+@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-6px)} 40%,80%{transform:translateX(6px)} }
+.shake { animation: shake 0.35s ease; }
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ====== HOME ====== -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="hero-badge">🌱 English Grammar</div>
+    <div class="hero-title">代名詞<span>マスター</span></div>
+    <div class="hero-sub">I / my / me / mine ― 格の使い方を完全攻略！</div>
+  </div>
+
+  <div class="name-row">
+    <input class="name-input" id="player-name" type="text" placeholder="名前を入力してね" maxlength="20">
+  </div>
+
+  <div class="section-label">モードを選ぶ</div>
+  <div class="mode-grid">
+    <div class="mode-card" data-mode="fill" onclick="selectMode('fill')">
+      <span class="mode-icon">📝</span>
+      <div class="mode-name">穴埋め問題</div>
+      <div class="mode-desc">選択肢から正しい代名詞を選ぼう</div>
+      <span class="mode-badge badge-easy">選択式</span>
+    </div>
+    <div class="mode-card" data-mode="error" onclick="selectMode('error')">
+      <span class="mode-icon">🔍</span>
+      <div class="mode-name">間違い探し</div>
+      <div class="mode-desc">間違った代名詞を見つけてなおそう</div>
+      <span class="mode-badge badge-find">クリック</span>
+    </div>
+    <div class="mode-card" data-mode="write" onclick="selectMode('write')">
+      <span class="mode-icon">✍️</span>
+      <div class="mode-name">書き取り問題</div>
+      <div class="mode-desc">日本語を参考に代名詞を入力しよう</div>
+      <span class="mode-badge badge-write">タイピング</span>
+    </div>
+    <div class="mode-card" data-mode="mix" onclick="selectMode('mix')">
+      <span class="mode-icon">🎲</span>
+      <div class="mode-name">ミックス問題</div>
+      <div class="mode-desc">3種類がランダムに出題！腕試しに</div>
+      <span class="mode-badge badge-hard">上級者向け</span>
+    </div>
+  </div>
+
+  <div class="level-btns" id="level-btns">
+    <button class="level-btn visible" id="lvl-easy" onclick="selectLevel('easy')">🌱 初級</button>
+    <button class="level-btn visible" id="lvl-mid"  onclick="selectLevel('mid')">🌿 中級</button>
+    <button class="level-btn visible" id="lvl-hard" onclick="selectLevel('hard')">🌳 上級</button>
+  </div>
+
+  <button class="start-btn" id="start-btn" onclick="startGame()" disabled>スタート！</button>
+
+  <canvas id="cert-canvas" width="800" height="560"></canvas>
+</div>
+
+<!-- ====== FILL-IN QUIZ ====== -->
+<div id="screen-fill" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goHome()">← もどる</button>
+    <div class="progress-wrap"><div class="progress-bar" id="fill-progress"></div></div>
+    <div class="progress-label" id="fill-progress-label">0/0</div>
+    <div class="streak-pill" id="fill-streak">🔥 0</div>
+  </div>
+
+  <div class="q-header">
+    <span class="q-type-badge" id="fill-type-badge" style="background:var(--teal-light);color:var(--teal-text)">穴埋め問題</span>
+    <div class="q-num" id="fill-q-num">Q1</div>
+  </div>
+
+  <button class="hint-toggle" onclick="toggleHint('fill-hint')">▸ 代名詞ヒント表を見る</button>
+  <div class="hint-table-wrap" id="fill-hint">
+    <table class="hint-table" id="fill-hint-table"></table>
+  </div>
+
+  <div class="question-card" id="fill-q-card">
+    <div class="q-jp" id="fill-jp"></div>
+    <div class="q-en" id="fill-en"></div>
+  </div>
+
+  <div class="choices" id="fill-choices"></div>
+  <div class="feedback-bar" id="fill-feedback"></div>
+  <div class="action-row">
+    <button class="btn-next" id="fill-next-btn" onclick="fillNext()" disabled>次へ →</button>
+  </div>
+</div>
+
+<!-- ====== ERROR FIND ====== -->
+<div id="screen-error" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goHome()">← もどる</button>
+    <div class="progress-wrap"><div class="progress-bar" id="err-progress"></div></div>
+    <div class="progress-label" id="err-progress-label">0/10</div>
+    <div class="streak-pill" id="err-streak">🔥 0</div>
+  </div>
+
+  <div class="q-header">
+    <span class="q-type-badge" style="background:var(--purple-light);color:var(--purple-text)">間違い探し</span>
+    <div class="q-num" id="err-q-num">Q1</div>
+  </div>
+
+  <button class="hint-toggle" onclick="toggleHint('err-hint')">▸ 代名詞ヒント表を見る</button>
+  <div class="hint-table-wrap" id="err-hint">
+    <table class="hint-table" id="err-hint-table"></table>
+  </div>
+
+  <div class="question-card">
+    <div class="q-jp" id="err-jp"></div>
+    <div class="sentence-display" id="err-sentence"></div>
+    <div class="correction-input-row" id="err-correction-row">
+      <input class="correction-input" id="err-correction-input" placeholder="正しい代名詞を入力" maxlength="10" onkeydown="if(event.key==='Enter')checkCorrection()">
+      <button class="btn-check" onclick="checkCorrection()">確認</button>
+    </div>
+  </div>
+
+  <div class="feedback-bar" id="err-feedback"></div>
+  <div class="action-row">
+    <button class="btn-next" id="err-next-btn" onclick="errNext()" disabled>次へ →</button>
+  </div>
+</div>
+
+<!-- ====== WRITING ====== -->
+<div id="screen-write" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goHome()">← もどる</button>
+    <div class="progress-wrap"><div class="progress-bar" id="write-progress"></div></div>
+    <div class="progress-label" id="write-progress-label">0/15</div>
+    <div class="streak-pill" id="write-streak">🔥 0</div>
+  </div>
+
+  <div class="q-header">
+    <span class="q-type-badge" style="background:#E6F1FB;color:#0C447C">書き取り問題</span>
+    <div class="q-num" id="write-q-num">Q1</div>
+  </div>
+
+  <button class="hint-toggle" onclick="toggleHint('write-hint')">▸ 代名詞ヒント表を見る</button>
+  <div class="hint-table-wrap" id="write-hint">
+    <table class="hint-table" id="write-hint-table"></table>
+  </div>
+
+  <div class="question-card">
+    <div class="q-jp" id="write-jp"></div>
+    <div class="q-en" id="write-en"></div>
+  </div>
+
+  <input class="writing-input" id="write-input" placeholder="代名詞を入力してください" maxlength="20"
+         onkeydown="if(event.key==='Enter')checkWriting()">
+
+  <div class="feedback-bar" id="write-feedback"></div>
+  <div class="action-row">
+    <button class="btn-check" id="write-check-btn" onclick="checkWriting()">確認する</button>
+    <button class="btn-next" id="write-next-btn" onclick="writeNext()" disabled style="display:none">次へ →</button>
+  </div>
+</div>
+
+<!-- ====== MIX ====== -->
+<div id="screen-mix" class="screen">
+  <div class="top-bar">
+    <button class="back-btn" onclick="goHome()">← もどる</button>
+    <div class="progress-wrap"><div class="progress-bar" id="mix-progress"></div></div>
+    <div class="progress-label" id="mix-progress-label">0/15</div>
+    <div class="streak-pill" id="mix-streak">🔥 0</div>
+  </div>
+
+  <div class="q-header">
+    <span class="q-type-badge" id="mix-type-badge" style="background:var(--purple-light);color:var(--purple-text)">ミックス</span>
+    <div class="q-num" id="mix-q-num">Q1</div>
+  </div>
+
+  <button class="hint-toggle" onclick="toggleHint('mix-hint')">▸ 代名詞ヒント表を見る</button>
+  <div class="hint-table-wrap" id="mix-hint">
+    <table class="hint-table" id="mix-hint-table"></table>
+  </div>
+
+  <!-- fill型 -->
+  <div id="mix-fill-area">
+    <div class="question-card" id="mix-fill-card">
+      <div class="q-jp" id="mix-fill-jp"></div>
+      <div class="q-en" id="mix-fill-en"></div>
+    </div>
+    <div class="choices" id="mix-fill-choices"></div>
+  </div>
+
+  <!-- error型 -->
+  <div id="mix-error-area" style="display:none">
+    <div class="question-card">
+      <div class="q-jp" id="mix-err-jp"></div>
+      <div class="sentence-display" id="mix-err-sentence"></div>
+      <div class="correction-input-row" id="mix-err-correction-row">
+        <input class="correction-input" id="mix-err-correction-input" placeholder="正しい代名詞を入力" maxlength="10" onkeydown="if(event.key==='Enter')checkMixError()">
+        <button class="btn-check" onclick="checkMixError()">確認</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- write型 -->
+  <div id="mix-write-area" style="display:none">
+    <div class="question-card">
+      <div class="q-jp" id="mix-write-jp"></div>
+      <div class="q-en" id="mix-write-en"></div>
+    </div>
+    <input class="writing-input" id="mix-write-input" placeholder="代名詞を入力してください" maxlength="20"
+           onkeydown="if(event.key==='Enter')checkMixWrite()">
+  </div>
+
+  <div class="feedback-bar" id="mix-feedback"></div>
+  <div class="action-row">
+    <button class="btn-check" id="mix-write-check-btn" onclick="checkMixWrite()" style="display:none">確認する</button>
+    <button class="btn-next" id="mix-next-btn" onclick="mixNext()" disabled>次へ →</button>
+  </div>
+</div>
+
+<!-- ====== RESULT ====== -->
+<div id="screen-result" class="screen">
+  <div class="result-wrap">
+    <div class="result-card" id="result-card">
+      <div class="result-emoji" id="result-emoji">🎉</div>
+      <div class="result-title" id="result-title">おめでとう！</div>
+      <div class="result-sub" id="result-sub">よくがんばりました</div>
+      <div class="result-score-big" id="result-score">100%</div>
+      <div class="result-score-label">正解率</div>
+      <div class="result-stats">
+        <div class="rs"><div class="v" id="rs-correct">0</div><div class="l">せいかい</div></div>
+        <div class="rs"><div class="v" id="rs-wrong">0</div><div class="l">まちがい</div></div>
+        <div class="rs"><div class="v" id="rs-streak">0</div><div class="l">最大連続</div></div>
+      </div>
+      <div class="perfect-banner" id="perfect-banner">
+        🏆 パーフェクト達成！合格証をダウンロードしよう！
+      </div>
+      <div class="cert-name-row" id="cert-name-row">
+        <input class="cert-input" id="cert-name-input" placeholder="名前を確認・修正" maxlength="20">
+        <button class="cert-dl-btn" onclick="downloadCert()">📜 合格証DL</button>
+      </div>
+    </div>
+    <div class="result-btns">
+      <button class="btn-retry" onclick="retryGame()">🔄 もう一度</button>
+      <button class="btn-home"  onclick="goHome()">🏠 ホームへ</button>
+    </div>
+  </div>
+</div>
+
+</div><!-- .app -->
+
+<script>
+/* ================================================================
+   DATA
+================================================================ */
+
+const PRONOUNS = {
+  easy: [
+    {subj:'I',  poss:'my',   obj:'me',  posp:'mine'},
+  ],
+  mid: [
+    {subj:'I',   poss:'my',   obj:'me',  posp:'mine'},
+    {subj:'you', poss:'your', obj:'you', posp:'yours'},
+    {subj:'she', poss:'her',  obj:'her', posp:'hers'},
+    {subj:'he',  poss:'his',  obj:'him', posp:'his'},
+    {subj:'it',  poss:'its',  obj:'it',  posp:'—'},
+  ],
+  hard: [
+    {subj:'we',   poss:'our',   obj:'us',   posp:'ours'},
+    {subj:'you',  poss:'your',  obj:'you',  posp:'yours'},
+    {subj:'they', poss:'their', obj:'them', posp:'theirs'},
+  ],
+};
+
+const HINT_ROWS_ALL = [
+  ['I',   'my',    'me',   'mine',   '私'],
+  ['you', 'your',  'you',  'yours',  'あなた'],
+  ['he',  'his',   'him',  'his',    '彼'],
+  ['she', 'her',   'her',  'hers',   '彼女'],
+  ['it',  'its',   'it',   '—',      'それ'],
+  ['we',  'our',   'us',   'ours',   '私たち'],
+  ['you', 'your',  'you',  'yours',  'あなたたち'],
+  ['they','their', 'them', 'theirs', '彼/彼女ら'],
+];
+
+// ストック数 > 出題数 にすることで毎回ランダム抽出が働く
+// 出題数: 初級10 / 中級15 / 上級20
+const FILL_QUESTIONS = {
+  easy: [
+    {jp:'私は学生です。', en:'___ am a student.', answer:'I', type:'subj', pool:['I','my','me','mine']},
+    {jp:'これは私のバッグです。', en:'This is ___ bag.', answer:'my', type:'poss', pool:['I','my','me','mine']},
+    {jp:'彼は私に本をくれました。', en:'He gave ___ a book.', answer:'me', type:'obj', pool:['I','my','me','mine']},
+    {jp:'そのペンは私のものです。', en:'The pen is ___.', answer:'mine', type:'posp', pool:['I','my','me','mine']},
+    {jp:'私は毎日学校に行きます。', en:'___ go to school every day.', answer:'I', type:'subj', pool:['I','my','me','mine']},
+    {jp:'これは私の本です。', en:'This is ___ book.', answer:'my', type:'poss', pool:['I','my','me','mine']},
+    {jp:'先生は私を呼びました。', en:'The teacher called ___.', answer:'me', type:'obj', pool:['I','my','me','mine']},
+    {jp:'このかばんは私のものです。', en:'This bag is ___.', answer:'mine', type:'posp', pool:['I','my','me','mine']},
+    {jp:'私は犬が好きです。', en:'___ like dogs.', answer:'I', type:'subj', pool:['I','my','me','mine']},
+    {jp:'私の名前はケンタです。', en:'___ name is Kenta.', answer:'my', type:'poss', pool:['I','my','me','mine']},
+    {jp:'母は私を起こしてくれました。', en:'My mother woke ___ up.', answer:'me', type:'obj', pool:['I','my','me','mine']},
+    {jp:'このスマホは私のものです。', en:'This smartphone is ___.', answer:'mine', type:'posp', pool:['I','my','me','mine']},
+    {jp:'私は毎晩本を読みます。', en:'___ read books every night.', answer:'I', type:'subj', pool:['I','my','me','mine']},
+    {jp:'これは私のペンです。', en:'This is ___ pen.', answer:'my', type:'poss', pool:['I','my','me','mine']},
+    {jp:'友達は私に手紙を書きました。', en:'My friend wrote ___ a letter.', answer:'me', type:'obj', pool:['I','my','me','mine']},
+    {jp:'この自転車は私のものです。', en:'This bicycle is ___.', answer:'mine', type:'posp', pool:['I','my','me','mine']},
+  ],
+  mid: [
+    {jp:'彼は先生です。', en:'___ is a teacher.', answer:'He', type:'subj', pool:['He','His','Him','his']},
+    {jp:'これは彼女の自転車です。', en:'This is ___ bike.', answer:'her', type:'poss', pool:['She','her','her','hers']},
+    {jp:'私は彼女を知っています。', en:'I know ___.', answer:'her', type:'obj', pool:['she','her','hers','her']},
+    {jp:'その車は彼のものです。', en:'The car is ___.', answer:'his', type:'posp', pool:['he','his','him','his']},
+    {jp:'あなたは英語が上手ですね。', en:'___ speak English well.', answer:'You', type:'subj', pool:['You','Your','You','Yours']},
+    {jp:'これはあなたの消しゴムですか？', en:'Is this ___ eraser?', answer:'your', type:'poss', pool:['you','your','you','yours']},
+    {jp:'先生は彼に質問しました。', en:'The teacher asked ___ a question.', answer:'him', type:'obj', pool:['he','his','him','his']},
+    {jp:'このノートは彼女のものですか？', en:'Is this notebook ___?', answer:'hers', type:'posp', pool:['she','her','her','hers']},
+    {jp:'それは古い橋です。', en:'___ is an old bridge.', answer:'It', type:'subj', pool:['It','Its','It','—']},
+    {jp:'その犬の名前はポチです。', en:'___ name is Pochi.', answer:'Its', type:'poss', pool:['it','its','it','—']},
+    {jp:'彼女は毎朝走ります。', en:'___ runs every morning.', answer:'She', type:'subj', pool:['She','Her','Her','Hers']},
+    {jp:'私は彼を手伝いました。', en:'I helped ___.', answer:'him', type:'obj', pool:['he','his','him','his']},
+    {jp:'あなたの趣味は何ですか？', en:'What is ___ hobby?', answer:'your', type:'poss', pool:['you','your','you','yours']},
+    {jp:'このかばんはあなたのものですか？', en:'Is this bag ___?', answer:'yours', type:'posp', pool:['you','your','you','yours']},
+    {jp:'彼は私に電話しました。', en:'___ called me.', answer:'He', type:'subj', pool:['He','His','Him','his']},
+    {jp:'その傘は彼女のものです。', en:'That umbrella is ___.', answer:'hers', type:'posp', pool:['she','her','her','hers']},
+    {jp:'私は彼に会いました。', en:'I met ___ yesterday.', answer:'him', type:'obj', pool:['he','his','him','his']},
+    {jp:'彼女の夢は歌手になることです。', en:'___ dream is to be a singer.', answer:'Her', type:'poss', pool:['She','Her','Her','Hers']},
+    {jp:'あなたは今日学校がありますか？', en:'Do ___ have school today?', answer:'you', type:'subj', pool:['you','your','you','yours']},
+    {jp:'そのネコは毎日外に出ます。', en:'___ goes outside every day.', answer:'It', type:'subj', pool:['It','Its','It','—']},
+    {jp:'彼の趣味はサッカーです。', en:'___ hobby is soccer.', answer:'His', type:'poss', pool:['He','His','Him','his']},
+    {jp:'先生は彼女を褒めました。', en:'The teacher praised ___.', answer:'her', type:'obj', pool:['she','her','her','hers']},
+    {jp:'このノートはあなたのものですか？', en:'Is this notebook ___?', answer:'yours', type:'posp', pool:['you','your','you','yours']},
+    {jp:'彼は毎日図書館で勉強します。', en:'___ studies in the library every day.', answer:'He', type:'subj', pool:['He','His','Him','his']},
+  ],
+  hard: [
+    {jp:'私たちは同じクラスです。', en:'___ are in the same class.', answer:'We', type:'subj', pool:['We','Our','Us','Ours']},
+    {jp:'これは私たちの教室です。', en:'This is ___ classroom.', answer:'our', type:'poss', pool:['we','our','us','ours']},
+    {jp:'先生は私たちに宿題を出しました。', en:'The teacher gave ___ homework.', answer:'us', type:'obj', pool:['we','our','us','ours']},
+    {jp:'このプロジェクトは私たちのものです。', en:'This project is ___.', answer:'ours', type:'posp', pool:['we','our','us','ours']},
+    {jp:'彼らは毎日練習します。', en:'___ practice every day.', answer:'They', type:'subj', pool:['They','Their','Them','Theirs']},
+    {jp:'これは彼らのスクールバスです。', en:'This is ___ school bus.', answer:'their', type:'poss', pool:['they','their','them','theirs']},
+    {jp:'私は彼らを知っています。', en:'I know ___.', answer:'them', type:'obj', pool:['they','their','them','theirs']},
+    {jp:'このアイデアは彼らのものです。', en:'This idea is ___.', answer:'theirs', type:'posp', pool:['they','their','them','theirs']},
+    {jp:'あなたたちは今日授業がありますか？', en:'Do ___ have class today?', answer:'you', type:'subj', pool:['you','your','you','yours']},
+    {jp:'これはあなたたちの学校ですか？', en:'Is this ___ school?', answer:'your', type:'poss', pool:['you','your','you','yours']},
+    {jp:'先生はあなたたちを褒めました。', en:'The teacher praised ___.', answer:'you', type:'obj', pool:['you','your','you','yours']},
+    {jp:'このトロフィーはあなたたちのものです。', en:'This trophy is ___.', answer:'yours', type:'posp', pool:['you','your','you','yours']},
+    {jp:'彼らは新しい部員です。', en:'___ are new members.', answer:'They', type:'subj', pool:['They','Their','Them','Theirs']},
+    {jp:'私たちはお互いを助け合います。', en:'___ help each other.', answer:'We', type:'subj', pool:['We','Our','Us','Ours']},
+    {jp:'そのチームは彼らのものです。', en:'The team is ___.', answer:'theirs', type:'posp', pool:['they','their','them','theirs']},
+    {jp:'先生は私たちに英語を教えます。', en:'The teacher teaches ___ English.', answer:'us', type:'obj', pool:['we','our','us','ours']},
+    {jp:'あなたたちの計画はよかったです。', en:'___ plan was good.', answer:'Your', type:'poss', pool:['you','your','you','yours']},
+    {jp:'彼らのチームは強いです。', en:'___ team is strong.', answer:'Their', type:'poss', pool:['they','their','them','theirs']},
+    {jp:'私たちのゴールは優勝です。', en:'___ goal is to win.', answer:'Our', type:'poss', pool:['we','our','us','ours']},
+    {jp:'そのトロフィーは私たちのものです。', en:'That trophy is ___.', answer:'ours', type:'posp', pool:['we','our','us','ours']},
+    {jp:'彼らは公園で遊んでいます。', en:'___ are playing in the park.', answer:'They', type:'subj', pool:['They','Their','Them','Theirs']},
+    {jp:'私たちはバスで学校へ行きます。', en:'___ go to school by bus.', answer:'We', type:'subj', pool:['We','Our','Us','Ours']},
+    {jp:'先生は彼らに課題を出しました。', en:'The teacher gave ___ an assignment.', answer:'them', type:'obj', pool:['they','their','them','theirs']},
+    {jp:'あなたたちの答えは正しいです。', en:'___ answer is correct.', answer:'Your', type:'poss', pool:['you','your','you','yours']},
+    {jp:'この音楽は私たちのものではありません。', en:'This music is not ___.', answer:'ours', type:'posp', pool:['we','our','us','ours']},
+    {jp:'私たちの学校には図書館があります。', en:'___ school has a library.', answer:'Our', type:'poss', pool:['we','our','us','ours']},
+    {jp:'彼らの夢はオリンピックに出ることです。', en:'___ dream is to go to the Olympics.', answer:'Their', type:'poss', pool:['they','their','them','theirs']},
+    {jp:'先生はあなたたちの作文を読みました。', en:'The teacher read ___ essays.', answer:'your', type:'poss', pool:['you','your','you','yours']},
+  ],
+};
+
+// ストック18問 → 毎回10問ランダム抽出
+const ERROR_QUESTIONS = [
+  {jp:'私はサッカーが好きです。', wrong:'Me like soccer.', wrongWord:'Me', correct:'I', idx:0},
+  {jp:'これは私の本です。', wrong:'This is mine book.', wrongWord:'mine', correct:'my', idx:2},
+  {jp:'彼は私にプレゼントをくれました。', wrong:'He gave I a present.', wrongWord:'I', correct:'me', idx:3},
+  {jp:'そのかばんは私のものです。', wrong:'That bag is my.', wrongWord:'my', correct:'mine', idx:3},
+  {jp:'彼女は毎日勉強します。', wrong:'Her studies every day.', wrongWord:'Her', correct:'She', idx:0},
+  {jp:'これは彼女のペンです。', wrong:'This is hers pen.', wrongWord:'hers', correct:'her', idx:2},
+  {jp:'私は彼を知っています。', wrong:'I know his.', wrongWord:'his', correct:'him', idx:2},
+  {jp:'その自転車は彼のものです。', wrong:'That bike is him.', wrongWord:'him', correct:'his', idx:3},
+  {jp:'私たちは同じクラスです。', wrong:'Us are in the same class.', wrongWord:'Us', correct:'We', idx:0},
+  {jp:'彼らは新しい生徒です。', wrong:'Their are new students.', wrongWord:'Their', correct:'They', idx:0},
+  {jp:'あなたは英語が上手です。', wrong:'Your speak English well.', wrongWord:'Your', correct:'You', idx:0},
+  {jp:'このノートはあなたのものですか？', wrong:'Is this notebook you?', wrongWord:'you', correct:'yours', idx:3},
+  {jp:'先生は私たちに宿題を出しました。', wrong:'The teacher gave we homework.', wrongWord:'we', correct:'us', idx:3},
+  {jp:'その帽子は彼女のものです。', wrong:'That hat is she.', wrongWord:'she', correct:'hers', idx:3},
+  {jp:'私は彼女に手紙を書きました。', wrong:'I wrote she a letter.', wrongWord:'she', correct:'her', idx:2},
+  {jp:'彼のスマホは新しいです。', wrong:'Him smartphone is new.', wrongWord:'Him', correct:'His', idx:0},
+  {jp:'そのプロジェクトは彼らのものです。', wrong:'That project is they.', wrongWord:'they', correct:'theirs', idx:3},
+  {jp:'先生はあなたたちを褒めました。', wrong:'The teacher praised your.', wrongWord:'your', correct:'you', idx:2},
+];
+
+// ストック24問 → 毎回15問ランダム抽出
+const WRITE_QUESTIONS = [
+  {jp:'私は毎朝ランニングをします。', en:'___ run every morning.', answer:'I'},
+  {jp:'これは私の辞書です。', en:'This is ___ dictionary.', answer:'my'},
+  {jp:'先生は私に質問しました。', en:'The teacher asked ___ a question.', answer:'me'},
+  {jp:'このノートは私のものです。', en:'This notebook is ___.', answer:'mine'},
+  {jp:'彼女は音楽が好きです。', en:'___ likes music.', answer:'She'},
+  {jp:'これは彼女の消しゴムです。', en:'This is ___ eraser.', answer:'her'},
+  {jp:'私は彼を手伝いました。', en:'I helped ___.', answer:'him'},
+  {jp:'その帽子は彼のものです。', en:'That hat is ___.', answer:'his'},
+  {jp:'私たちは同じ学校です。', en:'___ go to the same school.', answer:'We'},
+  {jp:'これは私たちの教室です。', en:'This is ___ classroom.', answer:'our'},
+  {jp:'先生は私たちに英語を教えます。', en:'The teacher teaches ___ English.', answer:'us'},
+  {jp:'このプロジェクトは私たちのものです。', en:'This project is ___.', answer:'ours'},
+  {jp:'彼らは毎日練習します。', en:'___ practice every day.', answer:'They'},
+  {jp:'これは彼らの教科書です。', en:'This is ___ textbook.', answer:'their'},
+  {jp:'そのトロフィーは彼らのものです。', en:'That trophy is ___.', answer:'theirs'},
+  {jp:'あなたは今日元気ですか？', en:'Are ___ fine today?', answer:'you'},
+  {jp:'これはあなたのかさですか？', en:'Is this ___ umbrella?', answer:'your'},
+  {jp:'彼は毎日図書館で勉強します。', en:'___ studies in the library every day.', answer:'He'},
+  {jp:'その本は彼のものです。', en:'That book is ___.', answer:'his'},
+  {jp:'彼女は毎週日曜日に泳ぎます。', en:'___ swims every Sunday.', answer:'She'},
+  {jp:'この自転車は彼女のものです。', en:'This bicycle is ___.', answer:'hers'},
+  {jp:'先生は彼らを褒めました。', en:'The teacher praised ___.', answer:'them'},
+  {jp:'あなたたちの夢は何ですか？', en:'What is ___ dream?', answer:'your'},
+  {jp:'そのメダルは私たちのものです。', en:'That medal is ___.', answer:'ours'},
+];
+
+/* ================================================================
+   STATE
+================================================================ */
+let currentMode = null;
+let currentLevel = 'easy';
+let playerName = '';
+
+// Fill
+let fillQuestions = [], fillIdx = 0, fillCorrect = 0, fillWrong = 0, fillStreak = 0, fillMaxStreak = 0;
+// Error
+let errQuestions = [], errIdx = 0, errCorrect = 0, errWrong = 0, errStreak = 0, errMaxStreak = 0, errClickedIdx = -1;
+// Write
+let writeQuestions = [], writeIdx = 0, writeCorrect = 0, writeWrong = 0, writeStreak = 0, writeMaxStreak = 0;
+let writeChecked = false;
+// Mix
+let mixQuestions = [], mixIdx = 0, mixCorrect = 0, mixWrong = 0, mixStreak = 0, mixMaxStreak = 0;
+let mixChecked = false, mixClickedIdx = -1;
+
+/* ================================================================
+   HOME
+================================================================ */
+function selectMode(mode) {
+  currentMode = mode;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  document.querySelector(`[data-mode="${mode}"]`).classList.add('selected');
+
+  const lvlRow = document.getElementById('level-btns');
+  if (mode === 'fill') {
+    lvlRow.style.display = 'flex';
+    document.querySelectorAll('.level-btn').forEach(b => b.classList.add('visible'));
+  } else {
+    lvlRow.style.display = 'none';
+  }
+  updateStartBtn();
+}
+
+function selectLevel(lvl) {
+  currentLevel = lvl;
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById(`lvl-${lvl}`).classList.add('selected');
+  updateStartBtn();
+}
+
+function updateStartBtn() {
+  const btn = document.getElementById('start-btn');
+  if (!currentMode) { btn.disabled = true; return; }
+  if (currentMode === 'fill' && !currentLevel) { btn.disabled = true; return; }
+  btn.disabled = false;
+}
+
+function startGame() {
+  playerName = document.getElementById('player-name').value.trim() || 'あなた';
+  if (currentMode === 'fill') startFill();
+  else if (currentMode === 'error') startError();
+  else if (currentMode === 'write') startWrite();
+  else if (currentMode === 'mix') startMix();
+}
+
+function goHome() {
+  showScreen('home');
+  currentMode = null;
+  document.querySelectorAll('.mode-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.level-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('level-btns').style.display = 'none';
+  document.getElementById('start-btn').disabled = true;
+}
+
+/* ================================================================
+   HINT TABLE
+================================================================ */
+function buildHintTable(tableId, level) {
+  const table = document.getElementById(tableId);
+  let rows = HINT_ROWS_ALL;
+  if (level === 'easy') rows = [HINT_ROWS_ALL[0]];
+  else if (level === 'mid') rows = HINT_ROWS_ALL.slice(0,5);
+
+  table.innerHTML = `<thead><tr>
+    <th>主格(〜は/が)</th><th>所有格(〜の)</th>
+    <th>目的格(〜を/に)</th><th>所有代名詞(〜のもの)</th><th>意味</th>
+  </tr></thead><tbody>` +
+  rows.map(r => `<tr>
+    <td class="ht-subj">${r[0]}</td>
+    <td class="ht-poss">${r[1]}</td>
+    <td class="ht-obj">${r[2]}</td>
+    <td class="ht-posp">${r[3]}</td>
+    <td>${r[4]}</td>
+  </tr>`).join('') + '</tbody>';
+}
+
+function toggleHint(id) {
+  const el = document.getElementById(id);
+  el.classList.toggle('open');
+}
+
+/* ================================================================
+   FILL-IN QUIZ
+================================================================ */
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length-1; i>0; i--) {
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+const FILL_COUNT = {easy:10, mid:15, hard:20};
+
+function startFill() {
+  const count = FILL_COUNT[currentLevel];
+  fillQuestions = shuffle(FILL_QUESTIONS[currentLevel]).slice(0, count);
+  fillIdx = 0; fillCorrect = 0; fillWrong = 0; fillStreak = 0; fillMaxStreak = 0;
+  buildHintTable('fill-hint-table', currentLevel);
+  showScreen('fill');
+  renderFill();
+}
+
+function renderFill() {
+  const q = fillQuestions[fillIdx];
+  const total = fillQuestions.length;
+  const pct = (fillIdx / total) * 100;
+  document.getElementById('fill-progress').style.width = pct + '%';
+  document.getElementById('fill-progress-label').textContent = `${fillIdx}/${total}`;
+  document.getElementById('fill-q-num').textContent = `Q${fillIdx+1}`;
+  document.getElementById('fill-streak').textContent = `🔥 ${fillStreak}`;
+
+  document.getElementById('fill-jp').textContent = q.jp;
+  document.getElementById('fill-en').innerHTML = q.en.replace('___', '<span class="blank-box" id="fill-blank">　　</span>');
+
+  const feedback = document.getElementById('fill-feedback');
+  feedback.className = 'feedback-bar';
+  feedback.textContent = '';
+
+  const nextBtn = document.getElementById('fill-next-btn');
+  nextBtn.disabled = true;
+
+  const choices = document.getElementById('fill-choices');
+  choices.innerHTML = '';
+  const pool = shuffle(q.pool);
+  const seen = new Set();
+  pool.forEach(w => {
+    const lower = w.toLowerCase();
+    if (seen.has(lower)) return;
+    seen.add(lower);
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.textContent = w;
+    btn.onclick = () => chooseFill(btn, q);
+    choices.appendChild(btn);
+  });
+}
+
+function chooseFill(btn, q) {
+  const chosen = btn.textContent;
+  const blank = document.getElementById('fill-blank');
+  const correct = q.answer.toLowerCase() === chosen.toLowerCase();
+
+  document.querySelectorAll('.choice-btn').forEach(b => b.disabled = true);
+
+  blank.textContent = chosen;
+  blank.classList.add('filled');
+
+  const feedback = document.getElementById('fill-feedback');
+  const nextBtn = document.getElementById('fill-next-btn');
+
+  if (correct) {
+    btn.classList.add('correct-choice');
+    blank.classList.add('correct-ans');
+    fillCorrect++;
+    fillStreak++;
+    if (fillStreak > fillMaxStreak) fillMaxStreak = fillStreak;
+    feedback.textContent = `✅ 正解！ ${getTypeLabel(q.type)} の代名詞は「${q.answer}」です。`;
+    feedback.className = 'feedback-bar show ok pop-in';
+  } else {
+    btn.classList.add('wrong-choice');
+    blank.classList.add('wrong-ans');
+    document.querySelectorAll('.choice-btn').forEach(b => {
+      if (b.textContent.toLowerCase() === q.answer.toLowerCase()) b.classList.add('correct-choice');
+    });
+    fillWrong++;
+    fillStreak = 0;
+    feedback.textContent = `❌ 不正解。正解は「${q.answer}」（${getTypeLabel(q.type)}）でした。`;
+    feedback.className = 'feedback-bar show ng';
+    document.getElementById('fill-q-card').classList.add('shake');
+    setTimeout(() => document.getElementById('fill-q-card').classList.remove('shake'), 400);
+  }
+  nextBtn.disabled = false;
+  document.getElementById('fill-streak').textContent = `🔥 ${fillStreak}`;
+}
+
+function fillNext() {
+  fillIdx++;
+  if (fillIdx >= fillQuestions.length) {
+    showResult(fillCorrect, fillQuestions.length, fillMaxStreak, 'fill');
+  } else {
+    renderFill();
+  }
+}
+
+function getTypeLabel(type) {
+  return {subj:'主格', poss:'所有格', obj:'目的格', posp:'所有代名詞'}[type] || type;
+}
+
+/* ================================================================
+   ERROR FIND
+================================================================ */
+function startError() {
+  // ストック18問 → 毎回10問ランダム抽出
+  errQuestions = shuffle(ERROR_QUESTIONS).slice(0, 10);
+  errIdx = 0; errCorrect = 0; errWrong = 0; errStreak = 0; errMaxStreak = 0;
+  buildHintTable('err-hint-table', 'all');
+  showScreen('error');
+  renderError();
+}
+
+function renderError() {
+  const q = errQuestions[errIdx];
+  errClickedIdx = -1;
+  const total = errQuestions.length;
+  const pct = (errIdx / total) * 100;
+  document.getElementById('err-progress').style.width = pct + '%';
+  document.getElementById('err-progress-label').textContent = `${errIdx}/${total}`;
+  document.getElementById('err-q-num').textContent = `Q${errIdx+1}`;
+  document.getElementById('err-streak').textContent = `🔥 ${errStreak}`;
+  document.getElementById('err-jp').textContent = q.jp;
+
+  const corRow = document.getElementById('err-correction-row');
+  corRow.classList.remove('show');
+  document.getElementById('err-correction-input').value = '';
+
+  const feedback = document.getElementById('err-feedback');
+  feedback.className = 'feedback-bar';
+
+  const nextBtn = document.getElementById('err-next-btn');
+  nextBtn.disabled = true;
+
+  const words = q.wrong.split(' ');
+  const sent = document.getElementById('err-sentence');
+  sent.innerHTML = words.map((w, i) => {
+    const isPunct = /[.!?,;]$/.test(w);
+    const clean = w.replace(/[.!?,;]/g, '');
+    const punct = isPunct ? w.slice(-1) : '';
+    return `<span class="word-chip clickable" data-idx="${i}" onclick="clickWord(${i},'${clean}')">${clean}</span>${punct} `;
+  }).join('');
+}
+
+function clickWord(idx, word) {
+  if (document.getElementById('err-next-btn').disabled === false) return;
+  errClickedIdx = idx;
+  document.querySelectorAll('.word-chip').forEach(c => c.classList.remove('highlight-wrong'));
+  document.querySelector(`.word-chip[data-idx="${idx}"]`).classList.add('highlight-wrong');
+  document.getElementById('err-correction-row').classList.add('show');
+  document.getElementById('err-correction-input').focus();
+}
+
+function checkCorrection() {
+  const q = errQuestions[errIdx];
+  const inputEl = document.getElementById('err-correction-input');
+  const typed = inputEl.value.trim().toLowerCase();
+  const correctWord = q.correct.toLowerCase();
+  const isRightWord = errClickedIdx === q.idx;
+  const isRightAnswer = typed === correctWord;
+
+  const feedback = document.getElementById('err-feedback');
+  const nextBtn = document.getElementById('err-next-btn');
+
+  if (isRightWord && isRightAnswer) {
+    document.querySelector(`.word-chip[data-idx="${errClickedIdx}"]`).classList.remove('highlight-wrong');
+    document.querySelector(`.word-chip[data-idx="${errClickedIdx}"]`).classList.add('highlight-correct');
+    document.querySelector(`.word-chip[data-idx="${errClickedIdx}"]`).textContent = q.correct;
+    feedback.textContent = `✅ 正解！「${q.wrongWord}」→「${q.correct}」に直せました！`;
+    feedback.className = 'feedback-bar show ok pop-in';
+    errCorrect++;
+    errStreak++;
+    if (errStreak > errMaxStreak) errMaxStreak = errStreak;
+    document.getElementById('err-streak').textContent = `🔥 ${errStreak}`;
+    document.getElementById('err-correction-row').classList.remove('show');
+    nextBtn.disabled = false;
+  } else {
+    feedback.textContent = `❌ 不正解。間違っているのは「${q.wrongWord}」で、正しくは「${q.correct}」です。`;
+    feedback.className = 'feedback-bar show ng';
+    errWrong++;
+    errStreak = 0;
+    document.getElementById('err-streak').textContent = `🔥 ${errStreak}`;
+    document.getElementById('err-correction-row').classList.remove('show');
+    nextBtn.disabled = false;
+  }
+}
+
+function errNext() {
+  errIdx++;
+  if (errIdx >= errQuestions.length) {
+    showResult(errCorrect, errQuestions.length, errMaxStreak, 'error');
+  } else {
+    renderError();
+  }
+}
+
+/* ================================================================
+   WRITING
+================================================================ */
+function startWrite() {
+  // ストック24問 → 毎回15問ランダム抽出
+  writeQuestions = shuffle(WRITE_QUESTIONS).slice(0, 15);
+  writeIdx = 0; writeCorrect = 0; writeWrong = 0; writeStreak = 0; writeMaxStreak = 0;
+  buildHintTable('write-hint-table', 'all');
+  showScreen('write');
+  renderWrite();
+}
+
+function renderWrite() {
+  const q = writeQuestions[writeIdx];
+  const total = writeQuestions.length;
+  const pct = (writeIdx / total) * 100;
+  document.getElementById('write-progress').style.width = pct + '%';
+  document.getElementById('write-progress-label').textContent = `${writeIdx}/${total}`;
+  document.getElementById('write-q-num').textContent = `Q${writeIdx+1}`;
+  document.getElementById('write-streak').textContent = `🔥 ${writeStreak}`;
+
+  document.getElementById('write-jp').textContent = q.jp;
+  document.getElementById('write-en').innerHTML = q.en.replace('___', '<span class="blank-box" id="write-blank">　　　</span>');
+
+  const input = document.getElementById('write-input');
+  input.value = '';
+  input.className = 'writing-input';
+  input.disabled = false;
+  input.focus();
+
+  document.getElementById('write-feedback').className = 'feedback-bar';
+  document.getElementById('write-check-btn').style.display = 'inline-block';
+  document.getElementById('write-next-btn').style.display = 'none';
+  document.getElementById('write-next-btn').disabled = true;
+  writeChecked = false;
+}
+
+function checkWriting() {
+  if (writeChecked) return;
+  const q = writeQuestions[writeIdx];
+  const input = document.getElementById('write-input');
+  const typed = input.value.trim().toLowerCase();
+  const correct = q.answer.toLowerCase();
+
+  writeChecked = true;
+  input.disabled = true;
+
+  const blank = document.getElementById('write-blank');
+  const feedback = document.getElementById('write-feedback');
+
+  if (typed === correct) {
+    input.classList.add('correct-input');
+    blank.textContent = q.answer;
+    blank.classList.add('correct-ans');
+    feedback.textContent = `✅ 正解！「${q.answer}」は正しい使い方です！`;
+    feedback.className = 'feedback-bar show ok pop-in';
+    writeCorrect++;
+    writeStreak++;
+    if (writeStreak > writeMaxStreak) writeMaxStreak = writeStreak;
+  } else {
+    input.classList.add('wrong-input');
+    blank.textContent = q.answer;
+    blank.classList.add('wrong-ans');
+    feedback.textContent = `❌ 不正解。正解は「${q.answer}」でした。`;
+    feedback.className = 'feedback-bar show ng';
+    writeWrong++;
+    writeStreak = 0;
+  }
+  document.getElementById('write-streak').textContent = `🔥 ${writeStreak}`;
+  document.getElementById('write-check-btn').style.display = 'none';
+  document.getElementById('write-next-btn').style.display = 'inline-block';
+  document.getElementById('write-next-btn').disabled = false;
+}
+
+function writeNext() {
+  writeIdx++;
+  if (writeIdx >= writeQuestions.length) {
+    showResult(writeCorrect, writeQuestions.length, writeMaxStreak, 'write');
+  } else {
+    renderWrite();
+  }
+}
+
+/* ================================================================
+   MIX MODE
+================================================================ */
+function startMix() {
+  // 3種類からそれぞれ5問ずつ計15問を作りシャッフル
+  const fillPool = shuffle(FILL_QUESTIONS.mid).slice(0, 5).map(q => ({...q, _kind:'fill'}));
+  const errPool  = shuffle(ERROR_QUESTIONS).slice(0, 5).map(q => ({...q, _kind:'error'}));
+  const writePool= shuffle(WRITE_QUESTIONS).slice(0, 5).map(q => ({...q, _kind:'write'}));
+  mixQuestions = shuffle([...fillPool, ...errPool, ...writePool]);
+  mixIdx = 0; mixCorrect = 0; mixWrong = 0; mixStreak = 0; mixMaxStreak = 0;
+  buildHintTable('mix-hint-table', 'all');
+  showScreen('mix');
+  renderMix();
+}
+
+function renderMix() {
+  const q = mixQuestions[mixIdx];
+  const total = mixQuestions.length;
+  const pct = (mixIdx / total) * 100;
+  document.getElementById('mix-progress').style.width = pct + '%';
+  document.getElementById('mix-progress-label').textContent = `${mixIdx}/${total}`;
+  document.getElementById('mix-q-num').textContent = `Q${mixIdx+1}`;
+  document.getElementById('mix-streak').textContent = `🔥 ${mixStreak}`;
+
+  const badge = document.getElementById('mix-type-badge');
+  document.getElementById('mix-fill-area').style.display  = 'none';
+  document.getElementById('mix-error-area').style.display = 'none';
+  document.getElementById('mix-write-area').style.display = 'none';
+  document.getElementById('mix-write-check-btn').style.display = 'none';
+  document.getElementById('mix-feedback').className = 'feedback-bar';
+  document.getElementById('mix-next-btn').disabled = true;
+  mixChecked = false; mixClickedIdx = -1;
+
+  if (q._kind === 'fill') {
+    badge.textContent = '📝 穴埋め';
+    badge.style.background = 'var(--teal-light)'; badge.style.color = 'var(--teal-text)';
+    document.getElementById('mix-fill-area').style.display = 'block';
+    document.getElementById('mix-fill-jp').textContent = q.jp;
+    document.getElementById('mix-fill-en').innerHTML = q.en.replace('___', '<span class="blank-box" id="mix-fill-blank">　　</span>');
+    const choices = document.getElementById('mix-fill-choices');
+    choices.innerHTML = '';
+    const pool = shuffle(q.pool);
+    const seen = new Set();
+    pool.forEach(w => {
+      const lower = w.toLowerCase();
+      if (seen.has(lower)) return;
+      seen.add(lower);
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.textContent = w;
+      btn.onclick = () => chooseMixFill(btn, q);
+      choices.appendChild(btn);
+    });
+  } else if (q._kind === 'error') {
+    badge.textContent = '🔍 間違い探し';
+    badge.style.background = 'var(--purple-light)'; badge.style.color = 'var(--purple-text)';
+    document.getElementById('mix-error-area').style.display = 'block';
+    document.getElementById('mix-err-jp').textContent = q.jp;
+    document.getElementById('mix-err-correction-row').classList.remove('show');
+    document.getElementById('mix-err-correction-input').value = '';
+    const words = q.wrong.split(' ');
+    document.getElementById('mix-err-sentence').innerHTML = words.map((w, i) => {
+      const isPunct = /[.!?,;]$/.test(w);
+      const clean = w.replace(/[.!?,;]/g, '');
+      const punct = isPunct ? w.slice(-1) : '';
+      return `<span class="word-chip clickable" data-midx="${i}" onclick="clickMixWord(${i},'${clean}')">${clean}</span>${punct} `;
+    }).join('');
+  } else {
+    badge.textContent = '✍️ 書き取り';
+    badge.style.background = '#E6F1FB'; badge.style.color = '#0C447C';
+    document.getElementById('mix-write-area').style.display = 'block';
+    document.getElementById('mix-write-jp').textContent = q.jp;
+    document.getElementById('mix-write-en').innerHTML = q.en.replace('___', '<span class="blank-box" id="mix-write-blank">　　　</span>');
+    const inp = document.getElementById('mix-write-input');
+    inp.value = ''; inp.className = 'writing-input'; inp.disabled = false;
+    inp.focus();
+    document.getElementById('mix-write-check-btn').style.display = 'inline-block';
+  }
+}
+
+function chooseMixFill(btn, q) {
+  const chosen = btn.textContent;
+  const correct = q.answer.toLowerCase() === chosen.toLowerCase();
+  document.querySelectorAll('#mix-fill-choices .choice-btn').forEach(b => b.disabled = true);
+  const blank = document.getElementById('mix-fill-blank');
+  blank.textContent = chosen; blank.classList.add('filled');
+  const feedback = document.getElementById('mix-feedback');
+  if (correct) {
+    btn.classList.add('correct-choice'); blank.classList.add('correct-ans');
+    feedback.textContent = `✅ 正解！${getTypeLabel(q.type)}の代名詞は「${q.answer}」です。`;
+    feedback.className = 'feedback-bar show ok pop-in';
+    mixCorrect++; mixStreak++;
+    if (mixStreak > mixMaxStreak) mixMaxStreak = mixStreak;
+  } else {
+    btn.classList.add('wrong-choice'); blank.classList.add('wrong-ans');
+    document.querySelectorAll('#mix-fill-choices .choice-btn').forEach(b => {
+      if (b.textContent.toLowerCase() === q.answer.toLowerCase()) b.classList.add('correct-choice');
+    });
+    feedback.textContent = `❌ 不正解。正解は「${q.answer}」でした。`;
+    feedback.className = 'feedback-bar show ng';
+    mixWrong++; mixStreak = 0;
+  }
+  document.getElementById('mix-streak').textContent = `🔥 ${mixStreak}`;
+  document.getElementById('mix-next-btn').disabled = false;
+}
+
+function clickMixWord(idx, word) {
+  if (!document.getElementById('mix-next-btn').disabled === false) return;
+  mixClickedIdx = idx;
+  document.querySelectorAll('#mix-err-sentence .word-chip').forEach(c => c.classList.remove('highlight-wrong'));
+  document.querySelector(`#mix-err-sentence .word-chip[data-midx="${idx}"]`).classList.add('highlight-wrong');
+  document.getElementById('mix-err-correction-row').classList.add('show');
+  document.getElementById('mix-err-correction-input').focus();
+}
+
+function checkMixError() {
+  const q = mixQuestions[mixIdx];
+  const typed = document.getElementById('mix-err-correction-input').value.trim().toLowerCase();
+  const isRightWord = mixClickedIdx === q.idx;
+  const isRightAnswer = typed === q.correct.toLowerCase();
+  const feedback = document.getElementById('mix-feedback');
+  if (isRightWord && isRightAnswer) {
+    const chip = document.querySelector(`#mix-err-sentence .word-chip[data-midx="${mixClickedIdx}"]`);
+    chip.classList.remove('highlight-wrong'); chip.classList.add('highlight-correct');
+    chip.textContent = q.correct;
+    feedback.textContent = `✅ 正解！「${q.wrongWord}」→「${q.correct}」に直せました！`;
+    feedback.className = 'feedback-bar show ok pop-in';
+    mixCorrect++; mixStreak++;
+    if (mixStreak > mixMaxStreak) mixMaxStreak = mixStreak;
+  } else {
+    feedback.textContent = `❌ 不正解。間違っているのは「${q.wrongWord}」で、正しくは「${q.correct}」です。`;
+    feedback.className = 'feedback-bar show ng';
+    mixWrong++; mixStreak = 0;
+  }
+  document.getElementById('mix-err-correction-row').classList.remove('show');
+  document.getElementById('mix-streak').textContent = `🔥 ${mixStreak}`;
+  document.getElementById('mix-next-btn').disabled = false;
+}
+
+function checkMixWrite() {
+  if (mixChecked) return;
+  const q = mixQuestions[mixIdx];
+  const inp = document.getElementById('mix-write-input');
+  const typed = inp.value.trim().toLowerCase();
+  const correct = q.answer.toLowerCase();
+  mixChecked = true; inp.disabled = true;
+  const blank = document.getElementById('mix-write-blank');
+  const feedback = document.getElementById('mix-feedback');
+  if (typed === correct) {
+    inp.classList.add('correct-input'); blank.textContent = q.answer; blank.classList.add('correct-ans');
+    feedback.textContent = `✅ 正解！「${q.answer}」は正しい使い方です！`;
+    feedback.className = 'feedback-bar show ok pop-in';
+    mixCorrect++; mixStreak++;
+    if (mixStreak > mixMaxStreak) mixMaxStreak = mixStreak;
+  } else {
+    inp.classList.add('wrong-input'); blank.textContent = q.answer; blank.classList.add('wrong-ans');
+    feedback.textContent = `❌ 不正解。正解は「${q.answer}」でした。`;
+    feedback.className = 'feedback-bar show ng';
+    mixWrong++; mixStreak = 0;
+  }
+  document.getElementById('mix-streak').textContent = `🔥 ${mixStreak}`;
+  document.getElementById('mix-write-check-btn').style.display = 'none';
+  document.getElementById('mix-next-btn').disabled = false;
+}
+
+function mixNext() {
+  mixIdx++;
+  if (mixIdx >= mixQuestions.length) {
+    showResult(mixCorrect, mixQuestions.length, mixMaxStreak, 'mix');
+  } else {
+    renderMix();
+  }
+}
+
+/* ================================================================
+   RESULT
+================================================================ */
+let lastMode = '', lastCorrect = 0, lastTotal = 0;
+
+function showResult(correct, total, maxStreak, mode) {
+  lastMode = mode; lastCorrect = correct; lastTotal = total;
+  const pct = Math.round((correct / total) * 100);
+  const isPerfect = pct === 100;
+
+  document.getElementById('result-score').textContent = pct + '%';
+  document.getElementById('result-score').style.color = isPerfect ? 'var(--gold-dark)' : (pct >= 80 ? 'var(--teal)' : 'var(--red)');
+  document.getElementById('rs-correct').textContent = correct;
+  document.getElementById('rs-wrong').textContent = total - correct;
+  document.getElementById('rs-streak').textContent = maxStreak;
+
+  if (isPerfect) {
+    document.getElementById('result-emoji').textContent = '🏆';
+    document.getElementById('result-title').textContent = 'パーフェクト！';
+    document.getElementById('result-sub').textContent = `${playerName}さん、全問正解おめでとう！`;
+    document.getElementById('perfect-banner').classList.add('show');
+    document.getElementById('cert-name-row').classList.add('show');
+    document.getElementById('cert-name-input').value = playerName;
+  } else if (pct >= 80) {
+    document.getElementById('result-emoji').textContent = '🎉';
+    document.getElementById('result-title').textContent = 'よくできました！';
+    document.getElementById('result-sub').textContent = `${playerName}さん、あと少しで満点！`;
+    document.getElementById('perfect-banner').classList.remove('show');
+    document.getElementById('cert-name-row').classList.remove('show');
+  } else {
+    document.getElementById('result-emoji').textContent = '📚';
+    document.getElementById('result-title').textContent = 'もう一度挑戦！';
+    document.getElementById('result-sub').textContent = `${playerName}さん、練習を続けよう！`;
+    document.getElementById('perfect-banner').classList.remove('show');
+    document.getElementById('cert-name-row').classList.remove('show');
+  }
+
+  showScreen('result');
+  document.getElementById('result-card').classList.add('pop-in');
+}
+
+function retryGame() {
+  if (lastMode === 'fill') startFill();
+  else if (lastMode === 'error') startError();
+  else if (lastMode === 'write') startWrite();
+  else if (lastMode === 'mix') startMix();
+}
+
+/* ================================================================
+   CERTIFICATE DOWNLOAD
+================================================================ */
+function downloadCert() {
+  const name = document.getElementById('cert-name-input').value.trim() || playerName;
+  const canvas = document.getElementById('cert-canvas');
+  const ctx = canvas.getContext('2d');
+  const W = 800, H = 560;
+  ctx.clearRect(0,0,W,H);
+
+  // Background
+  ctx.fillStyle = '#FFFDF5';
+  ctx.fillRect(0,0,W,H);
+
+  // Border frame
+  ctx.strokeStyle = '#BA7517';
+  ctx.lineWidth = 6;
+  ctx.strokeRect(18,18,W-36,H-36);
+  ctx.strokeStyle = '#EF9F27';
+  ctx.lineWidth = 2;
+  ctx.strokeRect(26,26,W-52,H-52);
+
+  // Corner decorations
+  const corners = [[36,36],[W-36,36],[36,H-36],[W-36,H-36]];
+  corners.forEach(([x,y]) => {
+    ctx.fillStyle = '#EF9F27';
+    ctx.beginPath();
+    ctx.arc(x,y,8,0,Math.PI*2);
+    ctx.fill();
+  });
+
+  // Header
+  ctx.fillStyle = '#1B2A4A';
+  ctx.font = 'bold 14px Nunito, sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText('CERTIFICATE OF ACHIEVEMENT', W/2, 80);
+
+  // Title
+  ctx.fillStyle = '#BA7517';
+  ctx.font = 'bold 42px Nunito, sans-serif';
+  ctx.fillText('合格証', W/2, 150);
+
+  // Subtitle
+  ctx.fillStyle = '#1B2A4A';
+  ctx.font = '16px Noto Sans JP, sans-serif';
+  ctx.fillText('英語代名詞マスタートレーニング', W/2, 185);
+
+  // Divider
+  ctx.strokeStyle = '#EF9F27';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(120, 205); ctx.lineTo(W-120, 205); ctx.stroke();
+
+  // This is to certify
+  ctx.fillStyle = '#5a5a5a';
+  ctx.font = '13px Nunito, sans-serif';
+  ctx.fillText('以下の生徒が代名詞の問題に全問正解しました', W/2, 240);
+
+  // Name
+  ctx.fillStyle = '#1B2A4A';
+  ctx.font = 'bold 36px Nunito, "Noto Sans JP", sans-serif';
+  ctx.fillText(name, W/2, 300);
+
+  // Underline name
+  const nameW = ctx.measureText(name).width;
+  ctx.strokeStyle = '#BA7517';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(W/2 - nameW/2 - 20, 312); ctx.lineTo(W/2 + nameW/2 + 20, 312); ctx.stroke();
+
+  // Mode
+  const modeLabel = {fill:'穴埋め問題', error:'間違い探し', write:'書き取り問題', mix:'ミックス問題'}[lastMode];
+  const levelLabel = {easy:'初級', mid:'中級', hard:'上級'}[currentLevel] || '';
+  ctx.fillStyle = '#5a5a5a';
+  ctx.font = '14px Nunito, sans-serif';
+  ctx.fillText(`【${modeLabel}${levelLabel ? ' ' + levelLabel : ''}】パーフェクト達成`, W/2, 345);
+
+  // Stars
+  ctx.fillStyle = '#EF9F27';
+  ctx.font = '28px serif';
+  ctx.fillText('★ ★ ★', W/2, 395);
+
+  // Date
+  const now = new Date();
+  const dateStr = `${now.getFullYear()}年${now.getMonth()+1}月${now.getDate()}日`;
+  ctx.fillStyle = '#9a9a9a';
+  ctx.font = '13px Nunito, sans-serif';
+  ctx.fillText(dateStr, W/2, 440);
+
+  // Seal circle
+  ctx.fillStyle = '#1D9E75';
+  ctx.beginPath(); ctx.arc(W-100, H-80, 44, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 12px Nunito, sans-serif';
+  ctx.fillText('PERFECT', W-100, H-86);
+  ctx.font = 'bold 10px Nunito, sans-serif';
+  ctx.fillText('100%', W-100, H-72);
+
+  // Download
+  const link = document.createElement('a');
+  link.download = `合格証_${name}.png`;
+  link.href = canvas.toDataURL('image/png');
+  link.click();
+}
+
+/* ================================================================
+   UTILS
+================================================================ */
+function showScreen(name) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(`screen-${name}`).classList.add('active');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
